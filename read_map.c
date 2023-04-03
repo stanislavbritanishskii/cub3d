@@ -30,6 +30,7 @@ t_map *read_map(t_settings *settings, char *map_path)
 		while (j < 30)
 		{
 			res->grid[i][j] = (((i * j) % 3 == 0 && (i + j) % 3 != 1) || j == 0 || j == 29 || i == 0 || i == 29);
+//			res->grid[i][j] = ((i + j) % 3 == 1 || j == 0 || j == 29 || i == 0 || i == 29);
 			j++;
 		}
 		i++;

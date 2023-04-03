@@ -154,3 +154,38 @@ float rayMarch(t_vector position, t_vector direction, t_map *map) {
 	}
 	return MAX_DISTANCE;  // Didn't hit anything within the maximum distance
 }
+//float rayMarch(t_vector position, t_vector direction, t_map *map) {
+//	float distance = 0;
+//	int mapX = (int) position.x;
+//	int mapY = (int) position.y;
+//	float stepX = 1.0 / fabs(direction.x);
+//	float stepY = 1.0 / fabs(direction.y);
+//	float nextX = (direction.x > 0) ? ceil(position.x) : floor(position.x);
+//	float nextY = (direction.y > 0) ? ceil(position.y) : floor(position.y);
+//	float deltaX = fabs(nextX - position.x);
+//	float deltaY = fabs(nextY - position.y);
+//
+//	while (distance < MAX_DISTANCE) {
+//		if (deltaX < deltaY) {
+//			distance += deltaX;
+//			position.x = nextX;
+//			nextX += (direction.x > 0) ? 1 : -1;
+//			mapX = (int) position.x;
+//			if (getMapValue(mapX, mapY, map) == 1) {
+//				return distance;
+//			}
+//			deltaX = fabs(nextX - position.x);
+//		} else {
+//			distance += deltaY;
+//			position.y = nextY;
+//			nextY += (direction.y > 0) ? 1 : -1;
+//			mapY = (int) position.y;
+//			if (getMapValue(mapX, mapY, map) == 1) {
+//				return distance;
+//			}
+//			deltaY = fabs(nextY - position.y);
+//		}
+//	}
+//
+//	return MAX_DISTANCE;
+//}

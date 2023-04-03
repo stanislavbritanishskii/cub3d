@@ -74,19 +74,26 @@ void draw_line(t_settings *settings, int x1, int y1, int x2, int y2, uint32_t co
 
 void move(t_settings *settings, float x, float y)
 {
-	if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y + y)]) {
+//	if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y + y)]) {
+//		settings->observerPosition->x += x;
+//		settings->observerPosition->y += y;
+//		settings->pointOfView->x += x;
+//		settings->pointOfView->y += y;
+//	}
+	if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y)]) {
 		settings->observerPosition->x += x;
-		settings->observerPosition->y += y;
 		settings->pointOfView->x += x;
-		settings->pointOfView->y += y;
-	}
-	else if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y)]) {
-		settings->observerPosition->x += x;
-		settings->pointOfView->x += x;
+		if (!settings->map->grid[(int) (settings->observerPosition->x)][(int) (settings->observerPosition->y + y)]) {
+			settings->observerPosition->y += y;
+			settings->pointOfView->y += y;
+		}
 	}
 	else if (!settings->map->grid[(int) (settings->observerPosition->x)][(int) (settings->observerPosition->y + y)]) {
 		settings->observerPosition->y += y;
 		settings->pointOfView->y += y;
+		if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y)]) {
+			settings->observerPosition->x += x;
+			settings->pointOfView->x += x;}
 	}
 }
 
@@ -133,14 +140,20 @@ void ft_hook(void* param)
 	t_settings* settings = param;
 
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	float f = -WIDTH / (500 * M_PI);
+	float f = -WIDTH / (600 * M_PI);
 	float d = WIDTH;
-	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
+	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+//		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
 //		distance /= cosf(angle / M_PI);
 //		printf("Angle: %f, Distance: %f\n", angle, distance);
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0x00000000);
+
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
+		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
+		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
+
 		d = d + f;
 	}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
@@ -163,9 +176,18 @@ void ft_hook(void* param)
 		settings->pointOfView->x = settings->observerPosition->x;}
 
 
-	f = -WIDTH / (500 * M_PI);
+	f = -WIDTH / (600 * M_PI);
 	d = WIDTH;
 
+	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
+		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+//		distance *= sqrt(cosf(angle)) ;
+//		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+		d = d + f;
+	}
 
 
 //	for (float angle = -FOV / 2.0f; angle < FOV / 2.0f; angle += FOV / WIDTH) {
@@ -185,18 +207,60 @@ void ft_hook(void* param)
 //		d += f;
 //	}
 
-	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
-		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-		d = d + f;
-	}
 }
 //		float scalingFactor = (WIDTH / 2.0f) / tanf(90.0f / 2.0f);
 //		printf("Angle: %f, Distance: %f\n", angle, distance);
 //		float scalingFactor = (WIDTH / 2.0f) / tanf(90.0f / 2.0f);
 //		distance /= cosf(angle / M_PI);
+
+void autopilot(void *param)
+{
+	t_settings* settings = param;
+
+	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
+	float f = -WIDTH / (600 * M_PI);
+	float d = WIDTH - f;
+	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
+		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
+		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
+		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
+
+		d = d + f;
+	}
+
+	float angle = -0.5f * M_PI;
+	t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+	float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+	angle = 0;
+	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+	float distance2 = rayMarch(*settings->observerPosition, direction, settings->map);
+	angle = 0.5f * M_PI;
+	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+	float distance3 = rayMarch(*settings->observerPosition, direction, settings->map);
+	if (distance3 + distance + distance2 < 0.2f)
+		rotate_point(settings, 0.05f);
+	if (distance > distance2 && distance > distance3)
+		rotate_point(settings, 0.03f);
+	else if (distance3 > distance2 && distance3 > distance)
+		rotate_point(settings, -0.03f);
+	move_character(settings, FORWARD);
+
+
+	f = -WIDTH / (600 * M_PI);
+	d = WIDTH  -f;
+
+	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
+		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0x7A13BEFF);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0x7A13BEFF);
+		d = d + f;
+	}
+}
 
 void looper(void *param)
 {
@@ -231,7 +295,7 @@ int main(int argc, char **argv)
 //		d = d + f;
 //	}
 
-	mlx_loop_hook(settings->mlx, ft_hook, settings);
+	mlx_loop_hook(settings->mlx, autopilot, settings);
 
 	mlx_loop(settings->mlx);
 

@@ -34,12 +34,20 @@
 #define RIGHT 4
 # define VIEW_POINT_DIST 3
 # define MAX_DISTANCE 20
-# define STEP_SIZE 0.1f
+# define STEP_SIZE 0.01f
 # define RAY_STEP_SIZE 0.01f
+# define SKY 0x8080DFFF
+# define FLOOR 0xBDA045FF
 #define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16
 
+typedef struct dict_s
+{
+	char	**keys;
+	char	**values;
+	int		len;
+}	t_dict;
 
 typedef struct s_map
 {
@@ -93,5 +101,12 @@ float rayMarch(t_vector position, t_vector direction, t_map *map);
 
 // debug functions
 void	print_map(t_map *map, float x, float y, float x2, float y2);
+
+// dict functions;
+t_dict	*init_dict(void);
+void	dict_add(t_dict *dict, char *key, char *value);
+char	*dict_get(t_dict *dict, char *key, char *default_return);
+void	dict_delete(t_dict *dict, char *key);
+void	free_dict(t_dict *dict);
 
 #endif
