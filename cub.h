@@ -34,7 +34,8 @@
 #define RIGHT 4
 # define VIEW_POINT_DIST 3
 # define MAX_DISTANCE 20
-# define STEP_SIZE 0.01f
+# define STEP_SIZE 0.1f
+# define RAY_STEP_SIZE 0.01f
 #define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16

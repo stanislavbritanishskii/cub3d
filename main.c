@@ -188,6 +188,7 @@ void ft_hook(void* param)
 	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+
 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 		d = d + f;
 	}
@@ -220,8 +221,8 @@ int main(int argc, char **argv)
 
 	t_settings *settings = init_settings();
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	float f = WIDTH / (500 * M_PI);
-	float d = f;
+//	float f = WIDTH / (500 * M_PI);
+//	float d = f;
 //	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
 //		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 //		float distance = rayMarch(*settings->observerPosition, direction, settings->map);

@@ -148,9 +148,9 @@ float rayMarch(t_vector position, t_vector direction, t_map *map) {
 		if (getMapValue(mapX, mapY, map) == 1) {
 			return distance;  // Hit a wall
 		}
-		distance += STEP_SIZE;
-		position.x += direction.x * STEP_SIZE;
-		position.y += direction.y * STEP_SIZE;
+		distance += RAY_STEP_SIZE;
+		position.x += direction.x * RAY_STEP_SIZE;
+		position.y += direction.y * RAY_STEP_SIZE;
 	}
 	return MAX_DISTANCE;  // Didn't hit anything within the maximum distance
 }
