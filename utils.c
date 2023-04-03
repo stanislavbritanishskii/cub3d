@@ -101,9 +101,9 @@ void	print_map(t_map *map, float x, float y, float x2, float y2)
 		while (j < map->y_size)
 		{
 			if ((int)x == j && (int)y == i)
-				printf("\033[31mX\033[0m");
+				printf("\033[31mP\033[0m");
 			else if ((int)x2 == j && (int)y2 == i)
-				printf("\033[34mX\033[0m");
+				printf("\033[34mV\033[0m");
 			else
 				printf("%d", map->grid[i][j]);
 			j++;
