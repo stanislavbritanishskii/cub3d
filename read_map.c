@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 22:11:26 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/04 22:17:11 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,8 +230,8 @@ bool read_map(t_settings* settings, char *path)
 
 	settings->map = create_final_map(create_initial_map(fd));
 //	print_map(settings->map, 0, 0, 0, 0);
-	if (!check_final_map(settings->map))
+	if (!check_final_map(settings->map) || !map_is_closed(settings->map))
 		return (false);
-	printf("################%d###################\n", (int)map_is_closed(settings->map));
+	// printf("################%d###################\n", (int)map_is_closed(settings->map));
 	return (true);
 }
