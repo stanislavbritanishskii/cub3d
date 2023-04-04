@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 22:37:25 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/04 23:07:24 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ void	draw_walls(t_settings *settings)
 	}
 }
 
-void	draw_sky_floor(t_settings *settings)
+void	draw_sky_floor(t_settings *settings, bool start)
 {
 	float		f;
 	float		d;
@@ -181,6 +181,8 @@ void	draw_sky_floor(t_settings *settings)
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		distance = rayMarch(*settings->observerPosition, direction, settings->map);
 		distance *= cosf(angle);
+		if (start)
+			distance = 0.1f;
 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
 		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
@@ -196,23 +198,7 @@ void ft_hook(void* param)
 	t_settings* settings = param;
 
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	draw_sky_floor(settings);
-// 	float f = -WIDTH / (600 * M_PI);
-// 	float d = WIDTH;
-// 	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
-// 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-// 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-// //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
-// 		distance *= cosf(angle);
-// //		printf("Angle: %f, Distance: %f\n", angle, distance);
-
-// 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
-// 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
-// 		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
-// 		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
-
-// 		d = d + f;
-// 	}
+	draw_sky_floor(settings, false);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(settings->mlx);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
@@ -225,51 +211,14 @@ void ft_hook(void* param)
 		move_character(settings, BACKWARD);
 
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_E))
-		rotate_point(settings, 0.05f);
+		rotate_point(settings, TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Q))
-		rotate_point(settings, -0.05f);
+		rotate_point(settings, -TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 	{	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
 		settings->pointOfView->x = settings->observerPosition->x;}
-
 	draw_walls(settings);
-// 	f = -WIDTH / (600 * M_PI);
-// 	d = WIDTH;
-
-// 	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
-// 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-// 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-
-// 		distance *= cosf(angle) ;
-// //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
-// 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-// 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-// 		d = d + f;
-// 	}
-
-
-//	for (float angle = -FOV / 2.0f; angle < FOV / 2.0f; angle += FOV / WIDTH) {
-//		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-//		t_vector playerDirection;
-//		playerDirection.x = settings->pointOfView->x - settings->observerPosition->x;
-//		playerDirection.y = settings->pointOfView->y - settings->observerPosition->y;
-//		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-//		float dotProduct = vector_dot(direction, playerDirection);
-//		float rayAngle = acosf(dotProduct);
-//		distance = distance * cosf(rayAngle);
-//		float scalingFactor = WIDTH / (2.0f * tanf(FOV / 2.0f));
-//		float wallHeight = HEIGHT / distance * scalingFactor;
-//		int wallTop = (HEIGHT - wallHeight) / 2.0f;
-//		int wallBottom = wallTop + wallHeight;
-//		draw_line(settings, d, wallTop, d, wallBottom, 0xFFFFFFFF);
-//		d += f;
-//	}
-
 }
-//		float scalingFactor = (WIDTH / 2.0f) / tanf(90.0f / 2.0f);
-//		printf("Angle: %f, Distance: %f\n", angle, distance);
-//		float scalingFactor = (WIDTH / 2.0f) / tanf(90.0f / 2.0f);
-//		distance /= cosf(angle / M_PI);
 
 void autopilot(void *param)
 {
@@ -320,22 +269,6 @@ void autopilot(void *param)
 	}
 }
 
-void looper(void *param)
-{
-	t_settings *settings = param;
-	float f = WIDTH / (500 * M_PI);
-	float d = f;
-	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
-		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-
-		draw_line(settings, d, HEIGHT / 2 - distance * 50, d, HEIGHT / 2 + distance * 50, 0xFFFFFFFF);
-		d = d + f;
-	}
-}
-
-
-
 //void draw_minimap(t_settings *settings, )
 
 int main(int argc, char **argv)
@@ -356,6 +289,7 @@ int main(int argc, char **argv)
 	//		d = d + f;
 	//	}
 	//
+		draw_sky_floor(settings, true);
 		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);
 	}

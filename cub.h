@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbritani <sbritani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/03/06 10:30:15 by sbritani         ###   ########.fr       */
+/*   Updated: 2023/04/04 23:03:44 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@
 # define MAX_DISTANCE 20
 # define STEP_SIZE 0.1f
 # define RAY_STEP_SIZE 0.001f
+# define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
 # define SKY 0x8080DFFF
 # define FLOOR 0xBDA045FF
-#define FOV 60.0f // in degrees
+# define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16
 
