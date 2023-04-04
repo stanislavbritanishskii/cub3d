@@ -17,8 +17,14 @@ t_settings	*init_settings()
 	t_settings	*res;
 
 	res = malloc(sizeof(t_settings));
-	if (!read_map(res, "map2.txt"))
+	if (!read_map(res, "map.txt"))
 		return (printf("Error\n"), NULL);
+	printf("{%s}\n", dict_get(res->dict, "NO\0", "hui"));
+	res->no = mlx_load_png(dict_get(res->dict, "NO\0", "\0"));
+//	res->no = mlx_load_png("western.png");
+	res->so = mlx_load_png(dict_get(res->dict, "SO\0", "\0"));
+	res->ea = mlx_load_png(dict_get(res->dict, "EA\0", "\0"));
+	res->we = mlx_load_png(dict_get(res->dict, "WE\0", "\0"));
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image,0, 0);
@@ -158,8 +164,10 @@ void	draw_walls(t_settings *settings)
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		distance = rayMarch(*settings->observerPosition, direction, settings->map);
 		distance *= cosf(angle);
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+		draw_texture_line(settings, settings->ea, 0.5f, min(200 / (distance + 0.00001f), HEIGHT - 2), d);
+		draw_texture_line(settings, settings->ea, 0.5f, min(200 / (distance + 0.00001f), HEIGHT - 2), d + 1);
+//		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+//		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 		d = d + f;
 		angle += 0.0005f;
 	}

@@ -191,7 +191,7 @@ bool read_map(t_settings* settings, char *path)
 	{
 		if (str[0] != '\n')
 		{
-			splitted = ft_split(str, " ");
+			splitted = ft_split(str, " \n");
 
 			if (splitted_len(splitted) != 2)
 			{

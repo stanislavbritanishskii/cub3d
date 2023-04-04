@@ -32,9 +32,9 @@
 #define BACKWARD 2
 #define LEFT 3
 #define RIGHT 4
-# define VIEW_POINT_DIST 3
+# define VIEW_POINT_DIST 2
 # define MAX_DISTANCE 20
-# define STEP_SIZE 0.1f
+# define STEP_SIZE 0.01f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
@@ -73,6 +73,10 @@ typedef struct s_settings
 	t_dict		*dict;
 	t_vector	*observerPosition;
 	t_vector	*pointOfView;
+	mlx_texture_t *no;
+	mlx_texture_t *so;
+	mlx_texture_t *we;
+	mlx_texture_t *ea;
 	mlx_t		*mlx;
 	mlx_image_t	*image;
 
@@ -109,7 +113,10 @@ void	dict_add(t_dict *dict, char *key, char *value);
 char	*dict_get(t_dict *dict, char *key, char *default_return);
 void	dict_delete(t_dict *dict, char *key);
 void	free_dict(t_dict *dict);
+//draw functions
 
+void	put_pixel(t_settings *settings, int x, int y, uint32_t color);
+void	draw_texture_line(t_settings *settings, mlx_texture_t *texture, float x_shift, int height, int x_image);
 
 // map functions
 

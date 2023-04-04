@@ -1,11 +1,11 @@
 
-NO ./path_to_the_north_texture
+NO western.png
 
-SO ./path_to_the_south_texture
+SO western.png
 
-WE ./path_to_the_west_texture
+WE western.png
 
-EA ./path_to_the_east_texture
+EA western.png
 
 F 220,100,0
 C 225,30,0
