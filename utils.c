@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbritani <sbritani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/03/06 10:57:45 by sbritani         ###   ########.fr       */
+/*   Updated: 2023/04/04 22:12:38 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ t_map *copy_map(t_map *orig)
 
 bool dfs(t_map *map, int x, int y)
 {
-	print_map(map, 0, 0, (float)x, (float)y);
+	// print_map(map, 0, 0, (float)x, (float)y);
 	if (map->grid[y][x] == '1')
 		return true;
 	if (x == 0 || y == 0 || x == map->x_size - 1 || y == map->y_size - 1)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbritani <sbritani@student.42.fr>          +#+  +:+       +#+        */
+/*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/03/06 10:30:27 by sbritani         ###   ########.fr       */
+/*   Updated: 2023/04/04 22:11:26 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,49 @@ int splitted_len(char **splitted)
 	return (i);
 }
 
+bool	is_player(char element)
+{
+	if (element == 'S' || element == 'E' || element == 'W' || element == 'N')
+		return (true);
+	else
+		return (false);
+}
+
+bool	wrong_char(char element)
+{
+	if (element == '1' || element == '0' || is_player(element))
+		return (false);
+	else
+		return (true);
+	
+}
+
+bool	check_final_map(t_map *map)
+{
+	int x;
+	int y;
+	int	counter;
+
+	counter = 0;
+	y = 0;
+	while (y < map->y_size)
+	{
+		x = 0;
+		while (x < map->x_size)
+		{
+			if (wrong_char(map->grid[y][x]))
+				return (false);
+			if (is_player(map->grid[y][x]))
+				counter++;
+			x++;
+		}
+		y++;
+	}
+	if (counter != 1)
+		return(false);
+	return (true);
+}
+
 bool read_map(t_settings* settings, char *path)
 {
 	t_dict *dict;
@@ -163,7 +206,8 @@ bool read_map(t_settings* settings, char *path)
 				dict_add(dict, splitted[0], splitted[1]);
 			}
 			else
-			{printf("222\n");
+			{
+				printf("222\n");
 				ft_split_clear(splitted);
 				free(str);
 				free_dict(dict);
@@ -186,7 +230,8 @@ bool read_map(t_settings* settings, char *path)
 
 	settings->map = create_final_map(create_initial_map(fd));
 //	print_map(settings->map, 0, 0, 0, 0);
-
+	if (!check_final_map(settings->map))
+		return (false);
 	printf("################%d###################\n", (int)map_is_closed(settings->map));
 	return (true);
 }
