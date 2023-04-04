@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 01:35:15 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:45:30 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,6 @@ bool read_map(t_settings* settings, char *path)
 		if (str[0] != '\n')
 		{
 			splitted = ft_split(str, " \n");
-
 			if (splitted_len(splitted) != 2)
 			{
 				printf("111\n");
@@ -201,11 +200,10 @@ bool read_map(t_settings* settings, char *path)
 				free_dict(dict);
 				return false;
 			}
-			char tmp = dict_get(dict, splitted[0], "\0")[0];
-			// if (!dict_get(dict, splitted[0], "\0")[0])
-			if (!tmp)
+			if (!dict_get(dict, splitted[0], "\0")[0])
 			{
-				dict_add(dict, str_copy(splitted[0], -1), str_copy(splitted[1], -1));
+				// dict_add(dict, str_copy(splitted[0], -1), str_copy(splitted[1], -1));
+				dict_add(dict, splitted[0], splitted[1]);
 			}
 			else
 			{
@@ -215,7 +213,7 @@ bool read_map(t_settings* settings, char *path)
 				free_dict(dict);
 				return false;
 			}
-			free(tmp);
+			// free(tmp);
 			ft_split_clear(splitted);
 		}
 		free(str);
@@ -227,9 +225,10 @@ bool read_map(t_settings* settings, char *path)
 		printf("333\n");
 		return false;
 	}
+	if (str)
+		free(str);
 	// ft_split_clear(splitted);
 	settings->dict = dict;
-
 
 	settings->map = create_final_map(create_initial_map(fd));
 //	print_map(settings->map, 0, 0, 0, 0);
