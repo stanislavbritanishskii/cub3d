@@ -38,9 +38,21 @@
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
+
+# define SO 1
+# define NO 2
+# define WE 3
+# define EA 4
 # define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16
+
+typedef struct march_return_s
+{
+	float distance;
+	int direction;
+	float shift;
+} t_march_return;
 
 typedef struct dict_s
 {
@@ -100,7 +112,7 @@ int	check_wall_up(float x, float y, t_map *map);
 //
 int getMapValue(int x, int y, t_map *map);
 t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle);
-float rayMarch(t_vector position, t_vector direction, t_map *map);
+t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map);
 
 // debug functions
 void	print_map(t_map *map, float x, float y, float x2, float y2);

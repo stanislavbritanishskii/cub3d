@@ -174,22 +174,54 @@ void	draw_walls(t_settings *settings)
 	float		d;
 	float		angle;
 	float		distance;
-	t_vector	direction;	
+	t_vector	direction;
+	t_march_return *march;
 
 	f = -WIDTH / (600 * M_PI);
 	d = WIDTH;
 	angle = -0.15f * M_PI;
 	while (angle < 0.15f * M_PI)
 	{
+
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		distance = rayMarch(*settings->observerPosition, direction, settings->map);
-		distance *= cosf(angle);
-		draw_texture_line(settings, settings->ea, 0.5f, min(200 / (distance + 0.00001f), HEIGHT - 2), d);
-		draw_texture_line(settings, settings->ea, 0.5f, min(200 / (distance + 0.00001f), HEIGHT - 2), d + 1);
+		march = rayMarch(*settings->observerPosition, direction, settings->map);
+		march->distance *= cosf(angle);
+		printf("here 1\n");
+		printf("march dist = %f, shift = %f\n", march->distance, march->shift);
+		if (march->direction == SO)
+		{
+			draw_texture_line(settings, settings->so, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d);
+			draw_texture_line(settings, settings->so, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d + 1);
+		}
+		if (march->direction == EA)
+		{
+			draw_texture_line(settings, settings->ea, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d);
+			draw_texture_line(settings, settings->ea, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d + 1);
+		}
+		if (march->direction == NO)
+		{
+			draw_texture_line(settings, settings->no, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d);
+			draw_texture_line(settings, settings->no, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d + 1);
+		}
+		if (march->direction == WE)
+		{
+			draw_texture_line(settings, settings->we, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d);
+			draw_texture_line(settings, settings->we, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
+							  d + 1);
+		}
+		printf("here 2\n");
 //		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 //		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 		d = d + f;
 		angle += 0.0005f;
+		free(march);
 	}
 }
 
@@ -199,7 +231,8 @@ void	draw_sky_floor(t_settings *settings, bool start)
 	float		d;
 	float		angle;
 	float		distance;
-	t_vector	direction;	
+	t_vector	direction;
+	t_march_return *march;
 
 	f = -WIDTH / (600 * M_PI);
 	d = WIDTH;
@@ -207,14 +240,15 @@ void	draw_sky_floor(t_settings *settings, bool start)
 	while (angle < 0.15f * M_PI)
 	{
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		distance = rayMarch(*settings->observerPosition, direction, settings->map);
-		distance *= cosf(angle);
+		march = rayMarch(*settings->observerPosition, direction, settings->map);
+		march->distance *= cosf(angle);
 		if (start)
-			distance = 0.1f;
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , settings->ceiling_color);
-		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->ceiling_color);
-		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, settings->floor_color);
-		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->floor_color);
+			march->distance = 0.1f;
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , settings->ceiling_color);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->ceiling_color);
+		draw_line(settings, d, HEIGHT / 2 + min(100 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, settings->floor_color);
+		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->floor_color);
+		free(march);
 		d = d + f;
 		angle += 0.0005f;
 	}
