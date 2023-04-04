@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 01:02:58 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:32:47 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ unsigned long createRGBA(char **splitted)
 	r = ft_atoi(splitted[0]);
 	g = ft_atoi(splitted[1]);
 	b = ft_atoi(splitted[2]);
-	a = 255;
+	a = 255;   
 	return ((r & 0xff) << 24) + ((g & 0xff) << 16) + ((b & 0xff) << 8)
            + (a & 0xff);
 }
@@ -30,14 +30,18 @@ unsigned long createRGBA(char **splitted)
 t_settings	*init_settings()
 {
 	t_settings	*res;
-
+	char **splitted;
+	
 	res = malloc(sizeof(t_settings));
 	if (!read_map(res, "map.txt"))
 		return (printf("Error\n"), NULL);
-	res->ceiling_color = createRGBA(ft_split(dict_get(res->dict, "C\0", "hui"), ","));
-	res->floor_color = createRGBA(ft_split(dict_get(res->dict, "F\0", "hui"), ","));
+	splitted = ft_split(dict_get(res->dict, "C\0", "hui"), ",");
+	res->ceiling_color = createRGBA(splitted);
+	ft_split_clear(splitted);
+	splitted = ft_split(dict_get(res->dict, "F\0", "hui"), ",");
+	res->floor_color = createRGBA(splitted);
+	ft_split_clear(splitted);
 	res->no = mlx_load_png(dict_get(res->dict, "NO\0", "\0"));
-//	res->no = mlx_load_png("western.png");
 	res->so = mlx_load_png(dict_get(res->dict, "SO\0", "\0"));
 	res->ea = mlx_load_png(dict_get(res->dict, "EA\0", "\0"));
 	res->we = mlx_load_png(dict_get(res->dict, "WE\0", "\0"));
@@ -221,7 +225,7 @@ void ft_hook(void* param)
 {
 	t_settings* settings = param;
 
-	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
+	// print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
 	draw_sky_floor(settings, false);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(settings->mlx);
@@ -294,14 +298,29 @@ void ft_hook(void* param)
 
 //void draw_minimap(t_settings *settings, )
 
+void	check_leaks(void)
+{
+	system("leaks cub3d");
+}
+
+void	clean_settings(t_settings *settings)
+{
+	free_dict(settings->dict);
+	mlx_delete_texture(settings->no);
+	mlx_delete_texture(settings->so);
+	mlx_delete_texture(settings->ea);
+	mlx_delete_texture(settings->we);
+}
+
 int main(int argc, char **argv)
 {
 
 	t_settings *settings = init_settings();
 
+	atexit(check_leaks);
 	if(settings)
 	{
-		print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
+		// print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
 	//	float f = WIDTH / (500 * M_PI);
 	//	float d = f;
 	//	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
@@ -315,8 +334,8 @@ int main(int argc, char **argv)
 		draw_sky_floor(settings, true);
 		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);
-		
+		clean_settings(settings);
+		return (0);
 	}
+	return (1);
 }
-
-
