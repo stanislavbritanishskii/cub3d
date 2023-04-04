@@ -306,8 +306,8 @@ int main(int argc, char **argv)
 	//		d = d + f;
 	//	}
 	//
-		mlx_loop_hook(settings->mlx, ft_hook, settings);
-		mlx_loop(settings->mlx);	
+//		mlx_loop_hook(settings->mlx, ft_hook, settings);
+//		mlx_loop(settings->mlx);
 	}
 }
 

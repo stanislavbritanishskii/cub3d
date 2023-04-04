@@ -187,6 +187,6 @@ bool read_map(t_settings* settings, char *path)
 	settings->map = create_final_map(create_initial_map(fd));
 //	print_map(settings->map, 0, 0, 0, 0);
 
-
+	printf("################%d###################\n", (int)map_is_closed(settings->map));
 	return (true);
 }

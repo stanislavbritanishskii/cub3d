@@ -17,7 +17,7 @@
 # include <fcntl.h>
 # include <math.h>
 # include <stdio.h>
-
+# include <stdbool.h>
 # define RED 0xFF0000FF
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
@@ -108,5 +108,11 @@ void	dict_add(t_dict *dict, char *key, char *value);
 char	*dict_get(t_dict *dict, char *key, char *default_return);
 void	dict_delete(t_dict *dict, char *key);
 void	free_dict(t_dict *dict);
+
+
+// map functions
+
+bool map_is_closed(t_map *map);
+
 
 #endif

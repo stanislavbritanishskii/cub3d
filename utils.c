@@ -163,6 +163,81 @@ float rayMarch(t_vector position, t_vector direction, t_map *map) {
 	}
 	return MAX_DISTANCE;  // Didn't hit anything within the maximum distance
 }
+
+t_map *copy_map(t_map *orig)
+{
+	int i;
+	int j;
+	t_map *res;
+
+	res = malloc(sizeof(t_map));
+	res->x_size = orig->x_size;
+	res->y_size = orig->y_size;
+	res->grid = malloc(sizeof(char *) * res->y_size);
+	i = 0;
+	while (i < res->y_size)
+	{
+		res->grid[i] = malloc(sizeof(char) * res->x_size);
+		j = 0;
+		while (j < res->x_size)
+		{
+			res->grid[i][j] = orig->grid[i][j];
+			j++;
+		}
+		i++;
+	}
+	return (res);
+}
+
+bool dfs(t_map *map, int x, int y)
+{
+	print_map(map, 0, 0, (float)x, (float)y);
+	if (map->grid[y][x] == '1')
+		return true;
+	if (x == 0 || y == 0 || x == map->x_size - 1 || y == map->y_size - 1)
+		return false;
+	else
+	{
+		map->grid[y][x] = '1';
+		return (dfs(map, x + 1, y) * dfs(map, x - 1, y) * dfs(map, x, y + 1) *
+		dfs(map, x, y - 1) * dfs(map, x + 1, y + 1) * dfs(map, x + 1, y - 1) *
+		dfs(map, x - 1, y + 1) * dfs(map, x - 1, y - 1));
+	}
+}
+
+bool map_is_closed(t_map *map)
+{
+	t_map *local;
+	int x;
+	int y;
+	bool found;
+	bool res;
+
+	local = copy_map(map);
+	y = 0;
+	found = false;
+	while (y < local->y_size && !found)
+	{
+
+		x = 0;
+		while (x < map->x_size && !found)
+		{
+			if (local->grid[y][x] == 'N' || local->grid[y][x] == 'S' || local->grid[y][x] == 'W' || local->grid[y][x] == 'E')
+				found = true;
+			if (!found)
+				x++;
+		}
+		if (!found)
+			y++;
+	}
+	res = dfs(local, x, y);
+
+//	ft_split_clear(local->grid);
+//	free(local);
+	return (res);
+}
+
+
 //float rayMarch(t_vector position, t_vector direction, t_map *map) {
 //	float distance = 0;
 //	int mapX = (int) position.x;
