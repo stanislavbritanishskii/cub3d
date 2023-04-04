@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 00:57:10 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:50:16 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	put_pixel(t_settings *settings, int x, int y, uint32_t color);
 void	draw_texture_line(t_settings *settings, mlx_texture_t *texture, float x_shift, int height, int x_image);
 
 // map functions
-
+void	free_map(t_map *map);
 bool map_is_closed(t_map *map);
 
 

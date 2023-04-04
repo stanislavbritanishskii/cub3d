@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 01:45:30 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:53:16 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,22 @@
 //	}
 //	return res;
 //}
+
+void	free_map(t_map *map)
+{
+	int	x;
+	int	y;
+	
+	y = 0;
+	while (y < map->y_size)
+	{
+		free(map->grid[y]);
+		y++;
+	}
+	free(map->grid);
+	map->grid = NULL;
+	free(map);
+}
 
 char **create_initial_map(int fd)
 {

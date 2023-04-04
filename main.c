@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 01:32:47 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 01:48:15 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,6 +310,7 @@ void	clean_settings(t_settings *settings)
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
+	free_map(settings->map);
 }
 
 int main(int argc, char **argv)
