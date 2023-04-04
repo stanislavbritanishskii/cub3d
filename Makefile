@@ -19,7 +19,7 @@ OBJ_DIR	:= obj/
 # HEADS	:=
 NAME	:= cub3d
 
-	SRC		:=	checks.c main.c read_map.c utils.c
+	SRC		:=	checks.c main.c read_map.c utils.c dict.c
 
 OBJ		:=	$(addprefix $(OBJ_DIR), $(patsubst %.c, %.o, $(SRC)))
 

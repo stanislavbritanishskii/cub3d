@@ -51,9 +51,11 @@ typedef struct dict_s
 
 typedef struct s_map
 {
-	int	**grid;
+	char	**grid;
 	int	x_size;
 	int y_size;
+	uint32_t floor;
+	uint32_t ceiling;
 }   t_map;
 
 typedef struct s_vector
@@ -64,16 +66,13 @@ typedef struct s_vector
 
 typedef struct s_settings
 {
-	int	*floor_color;
-	int	*ceiling_color;
-	char	*NO;
-	char	*SO;
-	char	*WE;
-	char	*EA;
-	t_vector *observerPosition;
-	t_vector *pointOfView;
-	mlx_t 	*mlx;
-	mlx_image_t *image;
+	uint32_t	floor_color;
+	uint32_t	ceiling_color;
+	t_dict		*dict;
+	t_vector	*observerPosition;
+	t_vector	*pointOfView;
+	mlx_t		*mlx;
+	mlx_image_t	*image;
 
 	t_map	*map;
 }       t_settings;
@@ -84,7 +83,7 @@ typedef struct s_settings
 //functions
 
 //test version
-t_map *read_map(t_settings *settings, char *map_path);
+bool read_map(t_settings* settings, char *path);
 
 
 //wall checks

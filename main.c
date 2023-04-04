@@ -20,12 +20,12 @@ t_settings	*init_settings()
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image,0, 0);
-	res->map = read_map(res, "sosi\0");
+	if (read_map(res, "map.txt")) printf("map success\n");
 	res->observerPosition = malloc(sizeof(t_vector));
-	res->observerPosition->x = 1.5f;
-	res->observerPosition->y = 1.5f;
+	res->observerPosition->x = 16.5f;
+	res->observerPosition->y = 2.5f;
 	res->pointOfView = malloc(sizeof(t_vector));
-	res->pointOfView->x = 1.5f;
+	res->pointOfView->x = res->observerPosition->x;
 	res->pointOfView->y = res->observerPosition->y + 1.5f + VIEW_POINT_DIST;
 	return (res);
 }
@@ -80,18 +80,18 @@ void move(t_settings *settings, float x, float y)
 //		settings->pointOfView->x += x;
 //		settings->pointOfView->y += y;
 //	}
-	if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y)]) {
+	if (settings->map->grid[(int) (settings->observerPosition->y)][(int) (settings->observerPosition->x + x)] == '0') {
 		settings->observerPosition->x += x;
 		settings->pointOfView->x += x;
-		if (!settings->map->grid[(int) (settings->observerPosition->x)][(int) (settings->observerPosition->y + y)]) {
+		if (settings->map->grid[(int) (settings->observerPosition->y + y)][(int) (settings->observerPosition->x)] =='0') {
 			settings->observerPosition->y += y;
 			settings->pointOfView->y += y;
 		}
 	}
-	else if (!settings->map->grid[(int) (settings->observerPosition->x)][(int) (settings->observerPosition->y + y)]) {
+	else if (settings->map->grid[(int) (settings->observerPosition->y + y)][(int) (settings->observerPosition->x)] == '0') {
 		settings->observerPosition->y += y;
 		settings->pointOfView->y += y;
-		if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y)]) {
+		if (settings->map->grid[(int) (settings->observerPosition->y)][(int) (settings->observerPosition->x + x)] == '0') {
 			settings->observerPosition->x += x;
 			settings->pointOfView->x += x;}
 	}
@@ -109,7 +109,6 @@ void move_character(t_settings *settings, float move_dir) {
 	// Calculate unit vector in the view direction
 	float d_x = settings->pointOfView->x - settings->observerPosition->x;
 	float d_y = settings->pointOfView->y - settings->observerPosition->y;
-
 	float delta = STEP_SIZE / VIEW_POINT_DIST;
 	d_x *= delta;
 	d_y *= delta;
@@ -270,7 +269,7 @@ void looper(void *param)
 	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-		printf("Angle: %f, Distance: %f\n", angle, distance);
+
 		draw_line(settings, d, HEIGHT / 2 - distance * 50, d, HEIGHT / 2 + distance * 50, 0xFFFFFFFF);
 		d = d + f;
 	}
@@ -284,6 +283,7 @@ int main(int argc, char **argv)
 {
 
 	t_settings *settings = init_settings();
+
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
 //	float f = WIDTH / (500 * M_PI);
 //	float d = f;
@@ -294,6 +294,7 @@ int main(int argc, char **argv)
 //		draw_line(settings, d, HEIGHT / 2 - distance * 50, d, HEIGHT / 2 + distance * 50, 0xFFFFFFFF);
 //		d = d + f;
 //	}
+//
 
 	mlx_loop_hook(settings->mlx, autopilot, settings);
 

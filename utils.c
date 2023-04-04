@@ -94,22 +94,24 @@ void	print_map(t_map *map, float x, float y, float x2, float y2)
 	int i;
 	int j;
 
-	i = 0;
-	while (i < map->x_size)
+	j = 0;
+
+	while (j < map->y_size)
 	{
-		j = 0;
-		while (j < map->y_size)
+		i = 0;
+		while (i < map->x_size)
 		{
-			if ((int)x == j && (int)y == i)
+			if ((int)x == i && (int)y == j)
 				printf("\033[31mP\033[0m");
-			else if ((int)x2 == j && (int)y2 == i)
+			else if ((int)x2 == i && (int)y2 == j)
 				printf("\033[34mV\033[0m");
 			else
-				printf("%d", map->grid[i][j]);
-			j++;
+				printf("%c", map->grid[j][i]);
+			i++;
 		}
-		printf("\n");
-		i++;
+			printf("\n");
+//		printf("\n");
+		j++;
 	}
 }
 
@@ -118,7 +120,8 @@ int getMapValue(int x, int y, t_map *map)
 	if (x < 0 || y < 0 || x >= map->x_size || y >= map->y_size) {
 		return 1;  // Assume walls surround the map to prevent going out of bounds
 	}
-	return map->grid[x][y];
+//		printf("%d %d %s here\n", x, y, map->grid[y]);
+	return map->grid[y][x] - '0';
 }
 
 t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle) {
@@ -146,6 +149,7 @@ float rayMarch(t_vector position, t_vector direction, t_map *map) {
 		int mapX = (int)position.x;
 		int mapY = (int)position.y;
 		if (getMapValue(mapX, mapY, map) == 1) {
+
 			return distance;  // Hit a wall
 		}
 		distance += RAY_STEP_SIZE;
