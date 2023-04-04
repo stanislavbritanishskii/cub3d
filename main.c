@@ -17,7 +17,7 @@ t_settings	*init_settings()
 	t_settings	*res;
 
 	res = malloc(sizeof(t_settings));
-	if (!read_map(res, "map.txt"))
+	if (!read_map(res, "map2.txt"))
 		return (printf("Error\n"), NULL);
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
@@ -153,7 +153,7 @@ void ft_hook(void* param)
 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
 //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
-//		distance /= cosf(angle / M_PI);
+		distance *= cosf(angle);
 //		printf("Angle: %f, Distance: %f\n", angle, distance);
 
 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
@@ -189,7 +189,8 @@ void ft_hook(void* param)
 	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-//		distance *= sqrt(cosf(angle)) ;
+
+		distance *= cosf(angle) ;
 //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);

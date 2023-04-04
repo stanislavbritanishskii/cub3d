@@ -145,6 +145,7 @@ t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float 
 
 float rayMarch(t_vector position, t_vector direction, t_map *map) {
 	float distance = 0;
+	float step = RAY_STEP_SIZE;
 	while (distance < MAX_DISTANCE) {
 		int mapX = (int)position.x;
 		int mapY = (int)position.y;
@@ -152,9 +153,13 @@ float rayMarch(t_vector position, t_vector direction, t_map *map) {
 
 			return distance;  // Hit a wall
 		}
-		distance += RAY_STEP_SIZE;
-		position.x += direction.x * RAY_STEP_SIZE;
-		position.y += direction.y * RAY_STEP_SIZE;
+		if (distance >= BIG_DISTANCE)
+			step = RAY_STEP_SIZE * 10;
+		if (distance >= BIG_DISTANCE * 10)
+			step = RAY_STEP_SIZE * 100;
+		distance += step;
+		position.x += direction.x * step;
+		position.y += direction.y * step;
 	}
 	return MAX_DISTANCE;  // Didn't hit anything within the maximum distance
 }

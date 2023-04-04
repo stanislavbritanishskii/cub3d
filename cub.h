@@ -34,8 +34,9 @@
 #define RIGHT 4
 # define VIEW_POINT_DIST 3
 # define MAX_DISTANCE 20
-# define STEP_SIZE 0.01f
-# define RAY_STEP_SIZE 0.01f
+# define STEP_SIZE 0.1f
+# define RAY_STEP_SIZE 0.001f
+# define BIG_DISTANCE 1
 # define SKY 0x8080DFFF
 # define FLOOR 0xBDA045FF
 #define FOV 60.0f // in degrees
