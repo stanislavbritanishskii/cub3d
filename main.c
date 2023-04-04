@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 18:29:43 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/04 22:37:25 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,27 +142,77 @@ float vector_dot(t_vector v1, t_vector v2) {
 	return v1.x * v2.x + v1.y * v2.y;
 }
 
+void	draw_walls(t_settings *settings)
+{
+	float		f;
+	float		d;
+	float		angle;
+	float		distance;
+	t_vector	direction;	
+
+	f = -WIDTH / (600 * M_PI);
+	d = WIDTH;
+	angle = -0.15f * M_PI;
+	while (angle < 0.15f * M_PI)
+	{
+		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+		distance = rayMarch(*settings->observerPosition, direction, settings->map);
+		distance *= cosf(angle);
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+		d = d + f;
+		angle += 0.0005f;
+	}
+}
+
+void	draw_sky_floor(t_settings *settings)
+{
+	float		f;
+	float		d;
+	float		angle;
+	float		distance;
+	t_vector	direction;	
+
+	f = -WIDTH / (600 * M_PI);
+	d = WIDTH;
+	angle = -0.15f * M_PI;
+	while (angle < 0.15f * M_PI)
+	{
+		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+		distance = rayMarch(*settings->observerPosition, direction, settings->map);
+		distance *= cosf(angle);
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
+		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
+		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
+		d = d + f;
+		angle += 0.0005f;
+	}
+	
+}
+
 void ft_hook(void* param)
 {
 	t_settings* settings = param;
 
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	float f = -WIDTH / (600 * M_PI);
-	float d = WIDTH;
-	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
-		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-//		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
-		distance *= cosf(angle);
-//		printf("Angle: %f, Distance: %f\n", angle, distance);
+	draw_sky_floor(settings);
+// 	float f = -WIDTH / (600 * M_PI);
+// 	float d = WIDTH;
+// 	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
+// 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+// 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
+// //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
+// 		distance *= cosf(angle);
+// //		printf("Angle: %f, Distance: %f\n", angle, distance);
 
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
-		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
-		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
-		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
+// 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
+// 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
+// 		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
+// 		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
 
-		d = d + f;
-	}
+// 		d = d + f;
+// 	}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(settings->mlx);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
@@ -182,20 +232,20 @@ void ft_hook(void* param)
 	{	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
 		settings->pointOfView->x = settings->observerPosition->x;}
 
+	draw_walls(settings);
+// 	f = -WIDTH / (600 * M_PI);
+// 	d = WIDTH;
 
-	f = -WIDTH / (600 * M_PI);
-	d = WIDTH;
+// 	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
+// 		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+// 		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
 
-	for (float angle = -0.15f * M_PI; angle < 0.15f * M_PI; angle += 0.0005f) {
-		t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		float distance = rayMarch(*settings->observerPosition, direction, settings->map);
-
-		distance *= cosf(angle) ;
-//		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-		d = d + f;
-	}
+// 		distance *= cosf(angle) ;
+// //		distance /= sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle))) * sqrt(sqrt(cosf(angle)));
+// 		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+// 		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
+// 		d = d + f;
+// 	}
 
 
 //	for (float angle = -FOV / 2.0f; angle < FOV / 2.0f; angle += FOV / WIDTH) {
@@ -306,8 +356,8 @@ int main(int argc, char **argv)
 	//		d = d + f;
 	//	}
 	//
-//		mlx_loop_hook(settings->mlx, ft_hook, settings);
-//		mlx_loop(settings->mlx);
+		mlx_loop_hook(settings->mlx, ft_hook, settings);
+		mlx_loop(settings->mlx);
 	}
 }
 
