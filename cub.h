@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 23:03:44 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 00:57:10 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
-# define SKY 0x8080DFFF
-# define FLOOR 0xBDA045FF
 # define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16

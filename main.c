@@ -6,11 +6,35 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 23:07:24 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 00:56:35 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+unsigned long createRGBA(char **splitted)
+{   
+    unsigned int r;
+	unsigned int g;
+	unsigned int b;
+	unsigned int a;
+	
+	r = ft_atoi(splitted[0]);
+	g = ft_atoi(splitted[1]);
+	b = ft_atoi(splitted[2]);
+	a = 255;
+	return ((r & 0xff) << 24) + ((g & 0xff) << 16) + ((b & 0xff) << 8)
+           + (a & 0xff);
+}
+
+// unsigned int	convert_to_hex(char **splitted)
+// {
+// 	char	*hex[10];
+
+// 	hex[0] = '0';
+// 	hex[1] = 'x';
+	
+// }
 
 t_settings	*init_settings()
 {
@@ -19,7 +43,13 @@ t_settings	*init_settings()
 	res = malloc(sizeof(t_settings));
 	if (!read_map(res, "map.txt"))
 		return (printf("Error\n"), NULL);
-	printf("{%s}\n", dict_get(res->dict, "NO\0", "hui"));
+	// printf("{%s}\n", ft_split(dict_get(res->dict, "F\0", "hui"), ",")[0]);
+	// printf("{%s}\n", ft_split(dict_get(res->dict, "F\0", "hui"), ",")[1]);
+	// printf("{%s}\n", ft_split(dict_get(res->dict, "F\0", "hui"), ",")[2]);
+	res->ceiling_color = createRGBA(ft_split(dict_get(res->dict, "C\0", "hui"), ","));
+	printf("{%lx}", res->ceiling_color);
+	res->floor_color = createRGBA(ft_split(dict_get(res->dict, "F\0", "hui"), ","));
+	printf("{%lx}", res->floor_color);
 	res->no = mlx_load_png(dict_get(res->dict, "NO\0", "\0"));
 //	res->no = mlx_load_png("western.png");
 	res->so = mlx_load_png(dict_get(res->dict, "SO\0", "\0"));
@@ -191,10 +221,10 @@ void	draw_sky_floor(t_settings *settings, bool start)
 		distance *= cosf(angle);
 		if (start)
 			distance = 0.1f;
-		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , SKY);
-		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, SKY);
-		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, FLOOR);
-		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, FLOOR);
+		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , settings->ceiling_color);
+		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->ceiling_color);
+		draw_line(settings, d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, settings->floor_color);
+		draw_line(settings, d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->floor_color);
 		d = d + f;
 		angle += 0.0005f;
 	}
@@ -217,7 +247,6 @@ void ft_hook(void* param)
 		move_character(settings, FORWARD);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_S))
 		move_character(settings, BACKWARD);
-
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_E))
 		rotate_point(settings, TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Q))
