@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/04 22:12:38 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:35:41 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,12 +183,12 @@ t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 			if (abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)))
 			{
 				res->shift = abs_float(position.y - (int)position.y);
-				res->direction = 1 + (distance_to_grid(position.x) > 0);
+				res->direction = 1 + (position.x - (int)position.x > 0.5f);
 			}
 			else
 			{
 				res->shift = abs_float(position.x - (int) position.x);
-				res->direction = 2 + (distance_to_grid(position.y) > 0);
+				res->direction = 3 + (position.y - (int)position.y > 0.5f);
 			}
 			res->distance = distance;
 			return res;
@@ -274,7 +274,7 @@ bool map_is_closed(t_map *map)
 			y++;
 	}
 	res = dfs(local, x, y);
-
+	// map_clean();
 //	ft_split_clear(local->grid);
 //	free(local);
 	return (res);

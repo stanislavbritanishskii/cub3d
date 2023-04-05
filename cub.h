@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 00:57:10 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:10:39 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,14 @@
 #define RIGHT 4
 # define VIEW_POINT_DIST 2
 # define MAX_DISTANCE 20
-# define STEP_SIZE 0.01f
+# define STEP_SIZE 0.05f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
+# define FOV_HALF 0.15f * M_PI
+# define FOV_1 0.3f * M_PI
+# define RANDOM 1000
+# define NUMBER_OF_RAYS WIDTH
 
 # define SO 1
 # define NO 2

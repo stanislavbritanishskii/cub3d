@@ -1,11 +1,11 @@
 
 NO western.png
 
-SO western.png
+SO ocean.png
 
-WE western.png
+WE ocean.png
 
-EA western.png
+EA ocean.png
 
 F 189,160,69
 C 128,128,223
