@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 12:56:10 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:07:06 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ unsigned long createRGBA(char **splitted)
            + (a & 0xff);
 }
 
+void	error_exit(t_settings *settings)
+{
+	free_dict(settings->dict);
+	clean_map(settings->map);
+	free(settings);
+	ft_putstr_fd("Error\n", 2);
+}
+
 t_settings	*init_settings()
 {
 	t_settings	*res;
@@ -34,7 +42,7 @@ t_settings	*init_settings()
 	
 	res = malloc(sizeof(t_settings));
 	if (!read_map(res, "map.txt"))
-		return (printf("Error\n"), NULL);
+		return (error_exit(res), NULL);
 	splitted = ft_split(dict_get(res->dict, "C\0", "hui"), ",");
 	res->ceiling_color = createRGBA(splitted);
 	ft_split_clear(splitted);
@@ -352,11 +360,11 @@ void	clean_map(t_map *map)
 void	clean_settings(t_settings *settings)
 {
 	free_dict(settings->dict);
+	clean_map(settings->map);
 	mlx_delete_texture(settings->no);
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
-	clean_map(settings->map);
 }
 
 int main(int argc, char **argv)
