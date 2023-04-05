@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 13:07:06 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 13:15:27 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,8 +242,8 @@ void	draw_sky_floor(t_settings *settings, bool start)
 
 	f = -WIDTH / (600 * M_PI);
 	d = WIDTH;
-	angle = -0.15f * M_PI;
-	while (angle < 0.15f * M_PI)
+	angle = -FOV_HALF;
+	while (angle < FOV_HALF)
 	{
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		march = rayMarch(*settings->observerPosition, direction, settings->map);
