@@ -186,8 +186,6 @@ void	draw_walls(t_settings *settings)
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		march = rayMarch(*settings->observerPosition, direction, settings->map);
 		march->distance *= cosf(angle);
-		printf("here 1\n");
-		printf("march dist = %f, shift = %f\n", march->distance, march->shift);
 		if (march->direction == SO)
 		{
 			draw_texture_line(settings, settings->so, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
@@ -216,7 +214,6 @@ void	draw_walls(t_settings *settings)
 			draw_texture_line(settings, settings->we, march->shift, min(200 / (march->distance + 0.00001f), HEIGHT - 2),
 							  d + 1);
 		}
-		printf("here 2\n");
 //		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 //		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
 		d = d + f;
