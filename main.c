@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 13:15:27 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 15:38:21 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ unsigned long createRGBA(char **splitted)
 
 void	error_exit(t_settings *settings)
 {
-	free_dict(settings->dict);
-	clean_map(settings->map);
+	if (settings->dict)
+		free_dict(settings->dict);
+	if (settings->map)
+		clean_map(settings->map);
 	free(settings);
 	ft_putstr_fd("Error\n", 2);
 }
@@ -41,6 +43,8 @@ t_settings	*init_settings()
 	char **splitted;
 	
 	res = malloc(sizeof(t_settings));
+	res->map = NULL;
+	res->dict = NULL;
 	if (!read_map(res, "map.txt"))
 		return (error_exit(res), NULL);
 	splitted = ft_split(dict_get(res->dict, "C\0", "hui"), ",");
