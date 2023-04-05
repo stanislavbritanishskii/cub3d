@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 03:10:39 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:57:43 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	draw_texture_line(t_settings *settings, mlx_texture_t *texture, float x_shi
 // map functions
 
 bool map_is_closed(t_map *map);
+void	clean_map(t_map *map);
 
 
 #endif

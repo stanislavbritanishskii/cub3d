@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 03:35:41 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:57:52 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,7 +274,7 @@ bool map_is_closed(t_map *map)
 			y++;
 	}
 	res = dfs(local, x, y);
-	// map_clean();
+	clean_map(local);
 //	ft_split_clear(local->grid);
 //	free(local);
 	return (res);

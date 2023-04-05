@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 03:35:27 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/05 12:56:10 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,6 +335,20 @@ void	check_leaks(void)
 	system("leaks cub3d");
 }
 
+void	clean_map(t_map *map)
+{
+	int	y;
+
+	y = 0;
+	while (y < map->y_size)
+	{
+		free(map->grid[y]);
+		y++;
+	}
+	free(map->grid);
+	free(map);
+}
+
 void	clean_settings(t_settings *settings)
 {
 	free_dict(settings->dict);
@@ -342,6 +356,7 @@ void	clean_settings(t_settings *settings)
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
+	clean_map(settings->map);
 }
 
 int main(int argc, char **argv)
