@@ -286,27 +286,32 @@ void	draw_sky_floor(t_settings *settings, bool start)
 void ft_hook(void* param)
 {
 	t_settings* settings = param;
+	bool moved;
 
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	draw_sky_floor(settings, false);
+
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
-		mlx_close_window(settings->mlx);
+	{moved = true;mlx_close_window(settings->mlx);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
-		move_character(settings, RIGHT);
+	{moved = true;move_character(settings, RIGHT);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_A))
-		move_character(settings, LEFT);
+	{moved = true;move_character(settings, LEFT);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_W))
-		move_character(settings, FORWARD);
+	{moved = true;move_character(settings, FORWARD);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_S))
-		move_character(settings, BACKWARD);
+	{moved = true;move_character(settings, BACKWARD);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_E))
-		rotate_point(settings, TURN_ANGLE);
+	{moved = true;rotate_point(settings, TURN_ANGLE);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Q))
-		rotate_point(settings, -TURN_ANGLE);
+	{moved = true;rotate_point(settings, -TURN_ANGLE);}
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 	{	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
-		settings->pointOfView->x = settings->observerPosition->x;}
-	draw_walls(settings);
+		settings->pointOfView->x = settings->observerPosition->x; moved = true;}
+	if (moved)
+	{
+		draw_sky_floor(settings, false);
+		draw_walls(settings);
+	}
 	usleep(10000);
 }
 
@@ -385,7 +390,7 @@ int main(int argc, char **argv)
 //		 print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
 
 		draw_sky_floor(settings, true);
-		mlx_loop_hook(settings->mlx, autopilot, settings);
+		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);
 		clean_settings(settings);
 		return (0);
