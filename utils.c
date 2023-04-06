@@ -157,13 +157,67 @@ float abs_float(float a)
 	return (a);
 }
 
+//t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
+//{
+//	float distance = 0;
+//	float step = RAY_STEP_SIZE;
+//	t_march_return *res;
+//
+//	res= malloc(sizeof(t_march_return));
+//	while (distance < MAX_DISTANCE) {
+//		int mapX = (int)position.x;
+//		int mapY = (int)position.y;
+//		if (getMapValue(mapX, mapY, map) == 1)
+//		{
+////			return distance;  // Hit a wall
+//
+//			while (getMapValue(mapX, mapY, map) == 1)
+//			{
+//				distance -= RAY_STEP_SIZE;
+//				position.x -= direction.x * RAY_STEP_SIZE;
+//				position.y -= direction.y * RAY_STEP_SIZE;
+//				mapX = (int)position.x;
+//				mapY = (int)position.y;
+//			}
+//
+//			if (abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)))
+//			{
+//				res->shift = abs_float(position.y - (int)position.y);
+//				res->direction = 1 + (position.x - (int)position.x > 0.5f);
+//			}
+//			else
+//			{
+//				res->shift = abs_float(position.x - (int) position.x);
+//				res->direction = 3 + (position.y - (int)position.y > 0.5f);
+//			}
+//			res->distance = distance;
+//			return res;
+//		}
+//		if (distance >= BIG_DISTANCE)
+//			step = RAY_STEP_SIZE * 10;
+//		if (distance >= BIG_DISTANCE * 10)
+//			step = RAY_STEP_SIZE * 100;
+//		distance += step;
+//		position.x += direction.x * step;
+//		position.y += direction.y * step;
+//	}
+//	res->distance = MAX_DISTANCE;
+//	res->shift = 0.5f;
+//	res->direction = 1;
+//	return (res);  // Didn't hit anything within the maximum distance
+//}
+
 t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 {
 	float distance = 0;
+	float distance2 = 0;
 	float step = RAY_STEP_SIZE;
 	t_march_return *res;
 
 	res= malloc(sizeof(t_march_return));
+//	if (direction.x < 0)
+//		step =
+
 	while (distance < MAX_DISTANCE) {
 		int mapX = (int)position.x;
 		int mapY = (int)position.y;
@@ -206,6 +260,7 @@ t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 	res->direction = 1;
 	return (res);  // Didn't hit anything within the maximum distance
 }
+
 
 t_map *copy_map(t_map *orig)
 {

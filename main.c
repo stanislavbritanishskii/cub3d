@@ -201,30 +201,30 @@ void	draw_walls(t_settings *settings)
 		// printf("%d\n", march->direction);
 		if (march->direction == SO)
 		{
-			draw_texture_line(settings, settings->so, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->so, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->so, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->so, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d + 1);
 		}
 		if (march->direction == EA)
 		{
-			draw_texture_line(settings, settings->ea, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->ea, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->ea, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->ea, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d + 1);
 		}
 		if (march->direction == NO)
 		{
-			draw_texture_line(settings, settings->no, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->no, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->no, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->no, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d + 1);
 		}
 		if (march->direction == WE)
 		{
-			draw_texture_line(settings, settings->we, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->we, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->we, march->shift, min(RANDOM / (march->distance + 0.00001f), HEIGHT - 2),
+			draw_texture_line(settings, settings->we, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d + 1);
 		}
 //		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);

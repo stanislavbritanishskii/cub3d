@@ -31,9 +31,12 @@ void	draw_texture_line(t_settings *settings, mlx_texture_t *texture, float x_shi
 
 	y_step = (float)texture->height / height;
 	y_image = 0;
-	while (y_image < height)
+	if (HEIGHT/2 - height/2 + y_image < 0)
+		y_image = - HEIGHT/2 + height/2;
+	while (y_image < height && HEIGHT/2 - height/2 + y_image < HEIGHT - 1)
 	{
-		put_pixel(settings, x_image, HEIGHT/2 - height/2 + y_image, lookup_color(texture, x, (int)(y_step * y_image)));
+		if (HEIGHT/2 - height/2 + y_image > 0 && HEIGHT/2 - height/2 + y_image < HEIGHT - 1)
+			put_pixel(settings, x_image, HEIGHT/2 - height/2 + y_image, lookup_color(texture, x, (int)(y_step * y_image)));
 		y_image++;
 	}
 }
