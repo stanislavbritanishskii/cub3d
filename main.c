@@ -74,7 +74,8 @@ void	put_pixel(t_settings *settings, int x, int y, uint32_t color)
 	mlx_put_pixel(settings->image, x, y, color);
 }
 
-void rotate_point(t_settings *settings, float theta) {
+void rotate_point(t_settings *settings, float theta)
+{
 	// Translate point to origin
 	float x = settings->pointOfView->x - settings->observerPosition->x;
 	float y = settings->pointOfView->y - settings->observerPosition->y;
@@ -110,6 +111,22 @@ void draw_line(t_settings *settings, int x1, int y1, int x2, int y2, uint32_t co
 			err += dx;
 			y1 += sy;
 		}
+	}
+}
+
+void draw_line_floor_sky(t_settings *settings, int x)
+{
+	int i;
+	i = 0;
+	while (i < HEIGHT / 2)
+	{
+		put_pixel(settings, x, i, settings->ceiling_color);
+		i++;
+	}
+	while (i < HEIGHT)
+	{
+		put_pixel(settings, x, i, settings->floor_color);
+		i++;
 	}
 }
 
@@ -189,10 +206,12 @@ void	draw_walls(t_settings *settings)
 	t_vector	direction;
 	t_march_return *march;
 
-	f = -WIDTH / (600 * M_PI);
+//	f = -WIDTH / (M_PI);
+	f = -1 / (FOV_1);
 	d = WIDTH;
 	angle = -FOV_HALF;
-	while (angle < FOV_HALF)
+//	while (angle < FOV_HALF)
+	while (d >= 0)
 	{
 
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
@@ -203,64 +222,38 @@ void	draw_walls(t_settings *settings)
 		{
 			draw_texture_line(settings, settings->so, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->so, march->shift, RANDOM / (march->distance + 0.00001f),
-							  d + 1);
 		}
 		if (march->direction == EA)
 		{
 			draw_texture_line(settings, settings->ea, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->ea, march->shift, RANDOM / (march->distance + 0.00001f),
-							  d + 1);
 		}
 		if (march->direction == NO)
 		{
 			draw_texture_line(settings, settings->no, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->no, march->shift, RANDOM / (march->distance + 0.00001f),
-							  d + 1);
 		}
 		if (march->direction == WE)
 		{
 			draw_texture_line(settings, settings->we, march->shift, RANDOM / (march->distance + 0.00001f),
 							  d);
-			draw_texture_line(settings, settings->we, march->shift, RANDOM / (march->distance + 0.00001f),
-							  d + 1);
 		}
-//		draw_line(settings, d, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-//		draw_line(settings, d+1, HEIGHT / 2 - min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2 + min(100 / (distance + 0.00001f), HEIGHT / 2 - 2), 0xFFFFF);
-		d = d + f;
-		angle += 0.0005f;
+		d = d - 1;
+		angle += FOV_1 / WIDTH;
+
 		free(march);
 	}
 }
 
 void	draw_sky_floor(t_settings *settings, bool start)
 {
-	float		f;
 	float		d;
-	float		angle;
-	float		distance;
-	t_vector	direction;
-	t_march_return *march;
 
-	f = -WIDTH / (600 * M_PI);
 	d = WIDTH;
-	angle = -FOV_HALF;
-	while (angle < FOV_HALF)
+	while (d >= 0)
 	{
-		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
-		march = rayMarch(*settings->observerPosition, direction, settings->map);
-		march->distance *= cosf(angle);
-		if (start)
-			march->distance = 0.1f;
-		draw_line(settings, d, HEIGHT / 2 - min(RANDOM/2 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2 , settings->ceiling_color);
-		draw_line(settings, d+1, HEIGHT / 2 - min(RANDOM/2 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->ceiling_color);
-		draw_line(settings, d, HEIGHT / 2 + min(RANDOM/2 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d, HEIGHT / 2, settings->floor_color);
-		draw_line(settings, d+1, HEIGHT / 2 + min(RANDOM/2 / (march->distance + 0.00001f), HEIGHT / 2 - 2), d+1, HEIGHT / 2, settings->floor_color);
-		free(march);
-		d = d + f;
-		angle += 0.0005f;
+		draw_line_floor_sky(settings, d);
+		d--;
 	}
 	
 }
@@ -379,7 +372,7 @@ int main(int argc, char **argv)
 	atexit(check_leaks);
 	if(settings)
 	{
-		// print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
+		 print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
 	//	float f = WIDTH / (500 * M_PI);
 	//	float d = f;
 	//	for (float angle = -0.25f * M_PI; angle < 0.25f * M_PI; angle += 0.001f) {
@@ -390,6 +383,7 @@ int main(int argc, char **argv)
 	//		d = d + f;
 	//	}
 	//
+
 		draw_sky_floor(settings, true);
 		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);

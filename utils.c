@@ -124,7 +124,8 @@ int getMapValue(int x, int y, t_map *map)
 	return map->grid[y][x] - '0';
 }
 
-t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle) {
+t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle)
+{
 	t_vector rayDirection;
 	rayDirection.x = pointOfView.x - observerPosition.x;
 	rayDirection.y = pointOfView.y - observerPosition.y;
@@ -207,17 +208,14 @@ float abs_float(float a)
 //	return (res);  // Didn't hit anything within the maximum distance
 //}
 
+
 t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 {
 	float distance = 0;
-	float distance2 = 0;
 	float step = RAY_STEP_SIZE;
 	t_march_return *res;
 
 	res= malloc(sizeof(t_march_return));
-//	if (direction.x < 0)
-//		step =
-
 	while (distance < MAX_DISTANCE) {
 		int mapX = (int)position.x;
 		int mapY = (int)position.y;
@@ -233,8 +231,32 @@ t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 				mapX = (int)position.x;
 				mapY = (int)position.y;
 			}
+//			distance += RAY_STEP_SIZE;
+//			position.x += direction.x * RAY_STEP_SIZE;
+//			position.y += direction.y * RAY_STEP_SIZE;
+//			while (getMapValue(mapX, mapY, map) == 1)
+//			{
+//				distance -= RAY_STEP_SIZE / 10;
+//				position.x -= direction.x * RAY_STEP_SIZE / 10;
+//				position.y -= direction.y * RAY_STEP_SIZE / 10;
+//				mapX = (int)position.x;
+//				mapY = (int)position.y;
+//			}
 
-			if (abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)))
+//			while (getMapValue(mapX, mapY, map) != 1)
+//			{
+//				distance += RAY_STEP_SIZE / 10;
+//				position.x += direction.x * RAY_STEP_SIZE / 10;
+//				position.y += direction.y * RAY_STEP_SIZE / 10;
+//				mapX = (int)position.x;
+//				mapY = (int)position.y;
+//			}
+
+
+
+			if ((abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)) &&
+					(getMapValue((int) (position.x + RAY_STEP_SIZE), mapY, map) == 1 || getMapValue((int) (position.x - RAY_STEP_SIZE), mapY, map) == 1)) || (getMapValue(mapX, (int)(position.y + RAY_STEP_SIZE), map) == 0 && getMapValue(mapX, (int)(position.y - RAY_STEP_SIZE), map) == 0))
+//			if (getMapValue((int) (position.x + direction.x * RAY_STEP_SIZE), (int) (position.y), map) == 1 && getMapValue((int) (position.x), (int) (position.y + direction.y * RAY_STEP_SIZE), map) == 1)
 			{
 				res->shift = abs_float(position.y - (int)position.y);
 				res->direction = 1 + (position.x - (int)position.x > 0.5f);
@@ -260,6 +282,157 @@ t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
 	res->direction = 1;
 	return (res);  // Didn't hit anything within the maximum distance
 }
+
+
+
+
+
+//t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map)
+//{
+//	float distance = 0;
+//	float distance2 = 0;
+//	float xx;
+//	float yy;
+//	t_vector position2;
+//	float step = 0;
+//	t_march_return *res;
+//
+//
+//	printf("position is %f %f\n", position.x, position.y);
+//	position2.x = position.x;
+//	position2.y = position.y;
+//	res = malloc(sizeof(t_march_return));
+//
+//	if (direction.x < 0)
+//	{
+//		xx = position.x - (int) position.x + 1;
+//		step = abs_float(xx / direction.x);
+//	}
+//	else if (direction.x > 0)
+//	{
+//		xx = position.x - (int) position.x;
+//		step = xx / direction.x;
+//	}
+////	position.x += RAY_STEP_SIZE;
+////	position.y += RAY_STEP_SIZE;
+//	while (distance < MAX_DISTANCE) {
+//		int mapX = (int)position.x;
+//		int mapY = (int)position.y;
+//		if(check_collision(position.x, position.y, map))
+//			break;
+////		if (getMapValue(mapX, mapY, map) == 1)
+////			break;
+////		{
+//////			return distance;  // Hit a wall
+////			if (getMapValue(mapX, mapY, map) == 1)
+////			{
+////			while (getMapValue(mapX, mapY, map) == 1)
+////			{
+////				distance -= RAY_STEP_SIZE;
+////				position.x -= direction.x * RAY_STEP_SIZE;
+////				position.y -= direction.y * RAY_STEP_SIZE;
+////				mapX = (int)position.x;
+////				mapY = (int)position.y;
+////
+////			}
+////			break ;
+////			}
+//
+//
+////			res->distance = distance;
+////			return res;
+////		}
+//		distance += step;
+//		position.x += direction.x * step;
+//		position.y += direction.y * step;
+//		step = abs_float(1 / direction.x);
+//	}
+//
+//	if (direction.y < 0)
+//	{
+//		yy = position2.y - (int) position2.y + 1;
+//		step = abs_float(yy / direction.y);
+//	}
+//	else if (direction.y > 0)
+//	{
+//		yy = position2.y - (int) position2.y;
+//		step = (yy / direction.y);
+//	}
+//	position2.x += RAY_STEP_SIZE;
+//	position2.y += RAY_STEP_SIZE;
+//	while (distance2 < MAX_DISTANCE) {
+//		int mapX = (int)position2.x;
+//		int mapY = (int)position2.y;
+//		if(check_collision(position2.x, position2.y, map))
+//			break;
+////		if (getMapValue(mapX, mapY, map) == 1)
+//////			break;
+////		{
+//////			return distance;  // Hit a wall
+////			if (getMapValue(mapX, mapY, map) == 1)
+////			{
+////				while (getMapValue(mapX, mapY, map) == 1)
+////				{
+////					distance -= RAY_STEP_SIZE;
+////					position.x -= direction.x * RAY_STEP_SIZE;
+////					position.y -= direction.y * RAY_STEP_SIZE;
+////					mapX = (int)position.x;
+////					mapY = (int)position.y;
+////
+////				}
+////				break ;
+////			}
+//
+////			if (abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)))
+////			{
+////				res->shift = abs_float(position.y - (int)position.y);
+////				res->direction = 1 + (position.x - (int)position.x > 0.5f);
+////			}
+////			else
+////			{
+////				res->shift = abs_float(position.x - (int) position.x);
+////				res->direction = 3 + (position.y - (int)position.y > 0.5f);
+////			}
+////			res->distance = distance2;
+////			return res;
+////		}
+//		distance2 += step;
+//		position2.x += direction.x * step;
+//		position2.y += direction.y * step;
+//		step = abs_float(1 / direction.y);
+//	}
+//
+////	printf("%f\n", sqrt(direction.x * direction.x + direction.y * direction.y));
+////	printf("%f %f \t\t %f %F\n", position.x, position.y, position2.x, position2.y );
+////	distance2 = 100;
+//	if (distance > distance2) {
+//		position.x = position2.x;
+//		position.y = position2.y;
+//		distance = distance2;
+//	}
+//	res->distance = distance;
+//	if (abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)))
+//	{
+//		res->shift = abs_float(position.y - (int)position.y);
+//		res->direction = 1 + (position.x - (int)position.x > 0.5f);
+//	}
+//	else
+//	{
+//		res->shift = abs_float(position.x - (int) position.x);
+//		res->direction = 3 + (position.y - (int)position.y > 0.5f);
+//	}
+////	res->distance = MAX_DISTANCE;
+////	res->shift = 0.5f;
+////	res->direction = 1;
+//
+//
+////	printf("position is %f %f\n", position.x, position.y);
+////	printf("direction is %f %f\n", direction.x, direction.y);
+////	printf("distance is %f \n", distance);
+//
+////	exit(1);
+//	return (res);  // Didn't hit anything within the maximum distance
+//}
 
 
 t_map *copy_map(t_map *orig)

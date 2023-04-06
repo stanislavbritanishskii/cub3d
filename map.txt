@@ -1,11 +1,11 @@
 
 NO western.png
 
-SO ocean.png
+SO bluestone.png
 
-WE ocean.png
+WE green.png
 
-EA ocean.png
+EA black.png
 
 F 189,160,69
 C 128,128,223

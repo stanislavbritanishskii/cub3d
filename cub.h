@@ -23,8 +23,8 @@
 # define GREEN 0x00FF00FF
 # define WHITE 0xFFFFFFFF
 # define BLACK 0x00000000
-# define HEIGHT			1080
-# define WIDTH			1920
+# define HEIGHT			540
+# define WIDTH			860
 
 # define VIEW_DIST 3;
 
@@ -136,6 +136,6 @@ void	draw_texture_line(t_settings *settings, mlx_texture_t *texture, float x_shi
 
 bool map_is_closed(t_map *map);
 void	clean_map(t_map *map);
-
+t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle);
 
 #endif
