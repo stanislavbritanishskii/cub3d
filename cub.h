@@ -33,7 +33,7 @@
 #define LEFT 3
 #define RIGHT 4
 # define VIEW_POINT_DIST 2
-# define MAX_DISTANCE 20
+# define MAX_DISTANCE 10
 # define STEP_SIZE 0.05f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
@@ -116,7 +116,7 @@ int	check_wall_up(float x, float y, t_map *map);
 //
 int getMapValue(int x, int y, t_map *map);
 t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle);
-t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map);
+t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map, t_march_return *res);
 
 // debug functions
 void	print_map(t_map *map, float x, float y, float x2, float y2);
