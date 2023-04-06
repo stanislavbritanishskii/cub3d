@@ -33,8 +33,8 @@
 #define LEFT 3
 #define RIGHT 4
 # define VIEW_POINT_DIST 2
-# define MAX_DISTANCE 10
-# define STEP_SIZE 0.05f
+# define MAX_DISTANCE 5
+# define STEP_SIZE 0.01f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
 # define BIG_DISTANCE 1
@@ -43,10 +43,10 @@
 # define RANDOM 1000
 # define NUMBER_OF_RAYS WIDTH
 
-# define SO 1
-# define NO 2
-# define WE 3
-# define EA 4
+# define SO 4
+# define NO 3
+# define WE 1
+# define EA 2
 # define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16

@@ -147,7 +147,7 @@ bool	wrong_char(char element)
 	
 }
 
-bool	check_final_map(t_map *map)
+bool	check_final_map(t_map *map, t_settings *settings)
 {
 	int x;
 	int y;
@@ -163,7 +163,34 @@ bool	check_final_map(t_map *map)
 			if (wrong_char(map->grid[y][x]))
 				return (false);
 			if (is_player(map->grid[y][x]))
+			{
+				settings->observerPosition = malloc(sizeof(t_vector));
+				settings->pointOfView = malloc(sizeof(t_vector));
+				settings->observerPosition->x = x + 0.5f;
+				settings->observerPosition->y = y + 0.5f;
+				if (map->grid[y][x] == 'N')
+				{
+					settings->pointOfView->x = x + 0.5f;
+					settings->pointOfView->y = y + 0.5 - VIEW_POINT_DIST;
+				}
+				if (map->grid[y][x] == 'S')
+				{
+					settings->pointOfView->x = x + 0.5f;
+					settings->pointOfView->y = y + 0.5 + VIEW_POINT_DIST;
+				}
+				if (map->grid[y][x] == 'E')
+				{
+					settings->pointOfView->x = x + 0.5f + VIEW_POINT_DIST;
+					settings->pointOfView->y = y + 0.5;
+				}
+				if (map->grid[y][x] == 'W')
+				{
+					settings->pointOfView->x = x + 0.5f - VIEW_POINT_DIST;
+					settings->pointOfView->y = y + 0.5;
+				}
+				printf("here\n");
 				counter++;
+			}
 			x++;
 		}
 		y++;
@@ -232,7 +259,7 @@ bool read_map(t_settings* settings, char *path)
 
 	settings->map = create_final_map(create_initial_map(fd));
 //	print_map(settings->map, 0, 0, 0, 0);
-	if (!check_final_map(settings->map) || !map_is_closed(settings->map))
+	if (!check_final_map(settings->map, settings) || !map_is_closed(settings->map))
 		return (false);
 	// printf("################%d###################\n", (int)map_is_closed(settings->map));
 	return (true);

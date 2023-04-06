@@ -267,8 +267,10 @@ bool map_is_closed(t_map *map)
 		x = 0;
 		while (x < map->x_size && !found)
 		{
-			if (local->grid[y][x] == 'N' || local->grid[y][x] == 'S' || local->grid[y][x] == 'W' || local->grid[y][x] == 'E')
+			if (local->grid[y][x] == 'N' || local->grid[y][x] == 'S' || local->grid[y][x] == 'W' || local->grid[y][x] == 'E') {
 				found = true;
+				map->grid[y][x] = '0';
+			}
 			if (!found)
 				x++;
 		}
