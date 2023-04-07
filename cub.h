@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 17:26:15 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 17:41:11 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <math.h>
 # include <stdio.h>
 # include <stdbool.h>
+
 # define RED 0xFF0000FF
 # define BLUE 0x0000FFFF
 # define GREEN 0x00FF00FF
@@ -25,13 +26,11 @@
 # define BLACK 0x00000000
 # define HEIGHT			540
 # define WIDTH			860
-
 # define VIEW_DIST 3;
-
-#define FORWARD 1
-#define BACKWARD 2
-#define LEFT 3
-#define RIGHT 4
+# define FORWARD 1
+# define BACKWARD 2
+# define LEFT 3
+# define RIGHT 4
 # define VIEW_POINT_DIST 2
 # define MAX_DISTANCE 10
 # define STEP_SIZE 0.05f
@@ -43,7 +42,6 @@
 # define RANDOM 1000
 # define SMALL 0.00001f
 # define NUMBER_OF_RAYS WIDTH
-
 # define SO 4
 # define NO 3
 # define WE 1
