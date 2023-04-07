@@ -6,7 +6,7 @@
 #    By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/21 20:12:24 by sbritani          #+#    #+#              #
-#    Updated: 2023/04/08 00:12:11 by dhendzel         ###   ########.fr        #
+#    Updated: 2023/04/08 00:13:34 by dhendzel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,8 +18,6 @@ LDFLAGS	:= -L ~/.brew/opt/glfw/lib/ -L $(MLXLIB) -L libs -lMLX42 -ldl -lglfw -lm
 LDFLAGS	:= -L "$(shell brew --prefix glfw)/lib/" -L $(MLXLIB)/build -L libs -lMLX42 -ldl -lglfw -lm -g
 OBJ_DIR	:= obj/
 SRC_DIR	:= src/
-# CMAKE = 
-# HEADS	:=
 NAME	:= cub3d
 
 SRC		:= checks.c \
@@ -45,11 +43,9 @@ all: libft libmlx $(NAME)
 $(NAME): $(OBJ_DIR) $(OBJS) 
 	$(CC) $(OBJS) $(libft_path) $(LDFLAGS) -o $(NAME)
 
-
 $(OBJS): %.o : %.c
 	gcc $(CFLAGS) -c -o $@ $<
-# $(OBJS): %.o: %.c 
-# 	$(CC) $(FLAGS) $< -c -o $@
+
 
 $(OBJ_DIR): 
 	mkdir obj
@@ -62,7 +58,7 @@ libmlx:
 	@$(MAKE) -C $(MLXLIB)/build
 	
 norm:
-	norminette $(SRC) cub.h
+	norminette $(FIL) cub.h
 
 clean:
 	make clean --directory=libs/libft/
@@ -76,5 +72,5 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re libft libmlx
 
