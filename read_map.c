@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 20:27:30 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 20:31:03 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,9 +168,8 @@ bool	check_final_map(t_map *map, t_settings *settings)
 				return (false);
 			if (is_player(map->grid[y][x]))
 			{
-				if (counter == 0)
+				if (!counter++)
 					set_player(settings, map, x, y);
-				counter++;
 			}
 			x++;
 		}

@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 20:07:49 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 21:27:27 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int	check_wall_down(float x, float y, t_map *map)
 	int	y_;
 
 	x_ = (int)x;
-
 	y_ = (int)y;
 	y_++;
 	if (x_ < map->x_size && y_ < map->y_size && map->grid[y_][x_] == 1)
@@ -54,9 +53,7 @@ int	check_wall_up(float x, float y, t_map *map)
 	int	y_;
 
 	x_ = (int)x;
-
 	y_ = (int)y;
-
 	y_--;
 	if (x_ < map->x_size && y_ >= 0 && map->grid[y_][x_] == 1)
 		return (1);
@@ -91,11 +88,10 @@ int	check_wall_left(float x, float y, t_map *map)
 
 void	print_map(t_map *map, float x, float y, float x2, float y2)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	j = 0;
-
 	while (j < map->y_size)
 	{
 		i = 0;
@@ -109,93 +105,124 @@ void	print_map(t_map *map, float x, float y, float x2, float y2)
 				printf("%c", map->grid[j][i]);
 			i++;
 		}
-			printf("\n");
-//		printf("\n");
+		printf("\n");
 		j++;
 	}
 }
 
-int getMapValue(int x, int y, t_map *map)
+int	get_map_value(int x, int y, t_map *map)
 {
-	if (x < 0 || y < 0 || x >= map->x_size || y >= map->y_size) {
-		return 1;
-	}
-	return map->grid[y][x] - '0';
+	if (x < 0 || y < 0 || x >= map->x_size || y >= map->y_size)
+		return (1);
+	return (map->grid[y][x] - '0');
 }
 
-t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle)
+t_vector	get_ray_direction(t_vector observerPosition,
+	t_vector pointOfView, float angle)
 {
-	t_vector rayDirection;
-	rayDirection.x = pointOfView.x - observerPosition.x;
-	rayDirection.y = pointOfView.y - observerPosition.y;
-	float length = sqrtf(rayDirection.x * rayDirection.x + rayDirection.y * rayDirection.y);
-	rayDirection.x /= length;
-	rayDirection.y /= length;
+	t_vector	ray_direction;
+	t_vector	ray_direction_rotated;
+	float		sin_angle;
+	float		cos_angle;
+	float		length;
 
-	float sinAngle = sinf(angle);
-	float cosAngle = cosf(angle);
-
-	t_vector rayDirectionRotated = {
-			cosAngle * rayDirection.x + sinAngle * rayDirection.y,
-			-sinAngle * rayDirection.x + cosAngle * rayDirection.y
-	};
-	return rayDirectionRotated;
+	ray_direction.x = pointOfView.x - observerPosition.x;
+	ray_direction.y = pointOfView.y - observerPosition.y;
+	length = sqrtf(ray_direction.x * ray_direction.x
+			+ ray_direction.y * ray_direction.y);
+	ray_direction.x /= length;
+	ray_direction.y /= length;
+	sin_angle = sinf(angle);
+	cos_angle = cosf(angle);
+	ray_direction_rotated.x = cos_angle * ray_direction.x
+		+ sin_angle * ray_direction.y;
+	ray_direction_rotated.y = -sin_angle * ray_direction.x
+		+ cos_angle * ray_direction.y;
+	return (ray_direction_rotated);
 }
 
-float distance_to_grid(float a)
+float	distance_to_grid(float a)
 {
 	if (a - (int)a > 0.5f || a - (int)a < -0.5f)
 		return ((int)a + 1 - a);
 	return (a - (int)a);
 }
 
-float abs_float(float a)
+float	abs_float(float a)
 {
 	if (a < 0)
 		return (-a);
 	return (a);
 }
 
-
-
-t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map, t_march_return *res)
+bool	incredible_check(t_vector position, t_vector direction,
+		t_map *map, t_march_return *res)
 {
-	float distance = 0;
-	float step = RAY_STEP_SIZE;
+	int	map_x;
+	int	map_y;
 
-	while (distance < MAX_DISTANCE) {
-		int mapX = (int)position.x;
-		int mapY = (int)position.y;
-		if (getMapValue(mapX, mapY, map) == 1)
-		{
+	map_x = (int)position.x;
+	map_y = (int)position.y;
+	return ((abs_float(distance_to_grid(position.x))
+			< abs_float(distance_to_grid(position.y))
+			&& (get_map_value((int)(position.x + RAY_STEP_SIZE),
+				map_y, map) == 1
+			|| get_map_value((int)(position.x - RAY_STEP_SIZE),
+			map_y, map) == 1))
+			|| (get_map_value(map_x, (int)(position.y + RAY_STEP_SIZE),
+				map) == 0
+			&& get_map_value(map_x, (int)(position.y - RAY_STEP_SIZE),
+				map) == 0));
+}
 
-			while (getMapValue(mapX, mapY, map) == 1)
-			{
-				distance -= RAY_STEP_SIZE;
-				position.x -= direction.x * RAY_STEP_SIZE;
-				position.y -= direction.y * RAY_STEP_SIZE;
-				mapX = (int)position.x;
-				mapY = (int)position.y;
-			}
-			if ((abs_float(distance_to_grid(position.x)) < abs_float(distance_to_grid(position.y)) &&
-					(getMapValue((int) (position.x + RAY_STEP_SIZE), mapY, map) == 1 || getMapValue((int) (position.x - RAY_STEP_SIZE), mapY, map) == 1)) || (getMapValue(mapX, (int)(position.y + RAY_STEP_SIZE), map) == 0 && getMapValue(mapX, (int)(position.y - RAY_STEP_SIZE), map) == 0))
-			{
-				res->shift = abs_float(position.y - (int)position.y);
-				res->direction = 1 + (position.x - (int)position.x > 0.5f);
-			}
-			else
-			{
-				res->shift = abs_float(position.x - (int) position.x);
-				res->direction = 3 + (position.y - (int)position.y > 0.5f);
-			}
-			res->distance = distance;
-			return res;
-		}
-		if (distance >= BIG_DISTANCE)
+void	hit_a_wall(t_vector position, t_vector direction,
+		t_map *map, t_march_return *res)
+{
+	int	map_x;
+	int	map_y;
+
+	map_x = (int)position.x;
+	map_y = (int)position.y;
+	while (get_map_value(map_x, map_y, map) == 1)
+	{
+		res->distance -= RAY_STEP_SIZE;
+		position.x -= direction.x * RAY_STEP_SIZE;
+		position.y -= direction.y * RAY_STEP_SIZE;
+		map_x = (int)position.x;
+		map_y = (int)position.y;
+	}
+	if (incredible_check(position, direction, map, res))
+	{
+		res->shift = abs_float(position.y - (int)position.y);
+		res->direction = 1 + (position.x - (int)position.x > 0.5f);
+	}
+	else
+	{
+		res->shift = abs_float(position.x - (int) position.x);
+		res->direction = 3 + (position.y - (int)position.y > 0.5f);
+	}		
+}
+
+t_march_return	*ray_march(t_vector position,
+		t_vector direction, t_map *map, t_march_return *res)
+{
+	float	step;
+	int		map_x;
+	int		map_y;
+
+	step = RAY_STEP_SIZE;
+	res->distance = 0;
+	while (res->distance < MAX_DISTANCE)
+	{
+		map_x = (int)position.x;
+		map_y = (int)position.y;
+		if (get_map_value(map_x, map_y, map) == 1)
+			return (hit_a_wall(position, direction, map, res), res);
+		if (res->distance >= BIG_DISTANCE)
 			step = RAY_STEP_SIZE * 10;
-		if (distance >= BIG_DISTANCE * 10)
+		if (res->distance >= BIG_DISTANCE * 10)
 			step = RAY_STEP_SIZE * 100;
-		distance += step;
+		res->distance += step;
 		position.x += direction.x * step;
 		position.y += direction.y * step;
 	}
@@ -205,15 +232,11 @@ t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map, t_ma
 	return (res);
 }
 
-
-
-
-
-t_map *copy_map(t_map *orig)
+t_map	*copy_map(t_map *orig)
 {
-	int i;
-	int j;
-	t_map *res;
+	int		i;
+	int		j;
+	t_map	*res;
 
 	res = malloc(sizeof(t_map));
 	res->x_size = orig->x_size;
@@ -234,86 +257,56 @@ t_map *copy_map(t_map *orig)
 	return (res);
 }
 
-bool dfs(t_map *map, int x, int y)
+bool	dfs(t_map *map, int x, int y)
 {
 	if (map->grid[y][x] == '1')
-		return true;
+		return (true);
 	if (x == 0 || y == 0 || x == map->x_size - 1 || y == map->y_size - 1)
-		return false;
+		return (false);
 	else
 	{
 		map->grid[y][x] = '1';
-		return (dfs(map, x + 1, y) * dfs(map, x - 1, y) * dfs(map, x, y + 1) *
-		dfs(map, x, y - 1) * dfs(map, x + 1, y + 1) * dfs(map, x + 1, y - 1) *
-		dfs(map, x - 1, y + 1) * dfs(map, x - 1, y - 1));
+		return (dfs(map, x + 1, y) * dfs(map, x - 1, y) * dfs(map, x, y + 1)
+			* dfs(map, x, y - 1) * dfs(map, x + 1, y + 1)
+			* dfs(map, x + 1, y - 1) * dfs(map, x - 1, y + 1)
+			* dfs(map, x - 1, y - 1));
 	}
 }
 
-bool map_is_closed(t_map *map)
+void	find_player(t_map *map, t_map *local, int *x, int *y)
 {
-	t_map *local;
-	int x;
-	int y;
-	bool found;
-	bool res;
+	bool	found;
 
-	local = copy_map(map);
-	y = 0;
+	*y = 0;
 	found = false;
-	while (y < local->y_size && !found)
+	while (*y < local->y_size && !found)
 	{
-
-		x = 0;
-		while (x < map->x_size && !found)
+		*x = 0;
+		while (*x < map->x_size && !found)
 		{
-			if (local->grid[y][x] == 'N' || local->grid[y][x] == 'S' || local->grid[y][x] == 'W' || local->grid[y][x] == 'E') {
+			if (local->grid[*y][*x] == 'N' || local->grid[*y][*x] == 'S'
+				|| local->grid[*y][*x] == 'W' || local->grid[*y][*x] == 'E')
+			{
 				found = true;
-				map->grid[y][x] = '0';
+				map->grid[*y][*x] = '0';
 			}
 			if (!found)
-				x++;
+				*x = *x + 1;
 		}
 		if (!found)
-			y++;
+			*y = *y + 1;
 	}
-	res = dfs(local, x, y);
-	clean_map(local);
-	return (res);
 }
 
+bool	map_is_closed(t_map *map)
+{
+	t_map	*local;
+	bool	res;
+	int		x;
+	int		y;
 
-//float rayMarch(t_vector position, t_vector direction, t_map *map) {
-//	float distance = 0;
-//	int mapX = (int) position.x;
-//	int mapY = (int) position.y;
-//	float stepX = 1.0 / fabs(direction.x);
-//	float stepY = 1.0 / fabs(direction.y);
-//	float nextX = (direction.x > 0) ? ceil(position.x) : floor(position.x);
-//	float nextY = (direction.y > 0) ? ceil(position.y) : floor(position.y);
-//	float deltaX = fabs(nextX - position.x);
-//	float deltaY = fabs(nextY - position.y);
-//
-//	while (distance < MAX_DISTANCE) {
-//		if (deltaX < deltaY) {
-//			distance += deltaX;
-//			position.x = nextX;
-//			nextX += (direction.x > 0) ? 1 : -1;
-//			mapX = (int) position.x;
-//			if (getMapValue(mapX, mapY, map) == 1) {
-//				return distance;
-//			}
-//			deltaX = fabs(nextX - position.x);
-//		} else {
-//			distance += deltaY;
-//			position.y = nextY;
-//			nextY += (direction.y > 0) ? 1 : -1;
-//			mapY = (int) position.y;
-//			if (getMapValue(mapX, mapY, map) == 1) {
-//				return distance;
-//			}
-//			deltaY = fabs(nextY - position.y);
-//		}
-//	}
-//
-//	return MAX_DISTANCE;
-//}
+	local = copy_map(map);
+	find_player(map, local, &x, &y);
+	res = dfs(local, x, y);
+	return (clean_map(local), res);
+}

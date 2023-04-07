@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 19:57:06 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 21:17:54 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,9 +123,9 @@ int	check_wall_up(float x, float y, t_map *map);
 
 
 //
-int getMapValue(int x, int y, t_map *map);
-t_vector getRayDirection(t_vector observerPosition, t_vector pointOfView, float angle);
-t_march_return *rayMarch(t_vector position, t_vector direction, t_map *map, t_march_return *res);
+int get_map_value(int x, int y, t_map *map);
+t_vector get_ray_direction(t_vector observerPosition, t_vector pointOfView, float angle);
+t_march_return *ray_march(t_vector position, t_vector direction, t_map *map, t_march_return *res);
 
 // debug functions
 void	print_map(t_map *map, float x, float y, float x2, float y2);

@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 20:10:21 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 21:18:30 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,9 +283,9 @@ void	draw_walls(t_settings *settings)
 	angle = -FOV_HALF;
 	while (d >= 0)
 	{
-		direction = getRayDirection(*settings->observerPosition,
+		direction = get_ray_direction(*settings->observerPosition,
 				*settings->pointOfView, angle);
-		rayMarch(*settings->observerPosition, direction, settings->map, &march);
+		ray_march(*settings->observerPosition, direction, settings->map, &march);
 		march.distance *= cosf(angle);
 		draw_direction(settings, &march, d);
 		d = d - 1;
@@ -349,19 +349,19 @@ void	ft_hook(void *param)
 // 	 	draw_sky_floor(settings, false);
 
 //  	float angle = -0.5f * M_PI;
-//  	t_vector direction = getRayDirection(*settings->observerPosition,
+//  	t_vector direction = get_ray_direction#(*settings->observerPosition,
 // *settings->pointOfView, angle);
-//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
 // 	float distance = march.distance;
 //  	angle = 0;
-//  	direction = getRayDirection(*settings->observerPosition,
+//  	direction = get_ray_direction#(*settings->observerPosition,
 //		*settings->pointOfView, angle);
-//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
 // 	float distance2 = march.distance;
 //  	angle = 0.5f * M_PI;
-//  	direction = getRayDirection(*settings->observerPosition, 
+//  	direction = get_ray_direction#(*settings->observerPosition, 
 //			*settings->pointOfView, angle);
-//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
 // 	float distance3 = march.distance;
 //  	if (distance3 + distance + distance2 < 1) {
 // 		rotate_point(settings, 0.06f);
