@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 17:41:11 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 19:57:06 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,16 @@
 # define FOV 60.0f // in degrees
 # define CELL 32
 # define SPEED 16
+
+typedef struct rotation_s
+{
+	float	x;
+	float	y;
+	float	cos_theta;
+	float	sin_theta;
+	float	new_x;
+	float	new_y;
+} t_rotation;
 
 typedef struct march_return_s
 {
