@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 15:36:41 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 17:18:56 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,6 +200,12 @@ bool	check_final_map(t_map *map, t_settings *settings)
 	return (true);
 }
 
+void	free_vectors(t_settings *settings)
+{
+	free(settings->observerPosition);
+	free(settings->pointOfView);
+}
+
 bool read_map(t_settings* settings, char *path)
 {
 	t_dict *dict;
@@ -207,11 +213,11 @@ bool read_map(t_settings* settings, char *path)
 	char *str;
 	char **splitted;
 	char key[3];
-
 	int fd;
 
-//	dict_add(dict, "NO", "default");
-	fd = open(path, O_RDONLY);
+	fd = open(path, 'r');
+	if (fd < 0)	
+		return (false);
 	dict = init_dict();
 	str = get_next_line(fd);
 	while (!check_dict_filled(dict) && str)
@@ -254,13 +260,9 @@ bool read_map(t_settings* settings, char *path)
 	}
 	if (str)
 		free(str);
-	// ft_split_clear(splitted);
 	settings->dict = dict;
-
 	settings->map = create_final_map(create_initial_map(fd));
-//	print_map(settings->map, 0, 0, 0, 0);
 	if (!check_final_map(settings->map, settings) || !map_is_closed(settings->map))
-		return (false);
-	// printf("################%d###################\n", (int)map_is_closed(settings->map));
+		return (free_vectors(settings), false);
 	return (true);
 }

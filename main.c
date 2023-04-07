@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/05 15:38:21 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 17:33:42 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,44 @@ void	error_exit(t_settings *settings)
 		free_dict(settings->dict);
 	if (settings->map)
 		clean_map(settings->map);
+	if (settings->no)
+		mlx_delete_texture(settings->no);
+	if (settings->so)
+		mlx_delete_texture(settings->so);
+	if (settings->ea)
+		mlx_delete_texture(settings->ea);
+	if (settings->we)
+		mlx_delete_texture(settings->we);
+	if (settings->observerPosition)
+		free(settings->observerPosition);
+	if (settings->pointOfView)
+		free(settings->pointOfView);
 	free(settings);
 	ft_putstr_fd("Error\n", 2);
 }
 
-t_settings	*init_settings()
+void	null_all(t_settings *res)
+{
+	res->map = NULL;
+	res->dict = NULL;
+	res->no = NULL;
+	res->so = NULL;
+	res->ea = NULL;
+	res->we = NULL;
+	res->pointOfView = NULL;
+	res->observerPosition = NULL;
+}
+
+t_settings	*init_settings(char *path)
 {
 	t_settings	*res;
 	char **splitted;
 	
 	res = malloc(sizeof(t_settings));
-	res->map = NULL;
-	res->dict = NULL;
-
-	if (!read_map(res, "map.txt"))
+	if (!res)
+		return(NULL);
+	null_all(res);
+	if (!read_map(res, path))
 		return (error_exit(res), NULL);
 	splitted = ft_split(dict_get(res->dict, "C\0", "hui"), ",");
 	res->ceiling_color = createRGBA(splitted);
@@ -58,15 +82,11 @@ t_settings	*init_settings()
 	res->so = mlx_load_png(dict_get(res->dict, "SO\0", "\0"));
 	res->ea = mlx_load_png(dict_get(res->dict, "EA\0", "\0"));
 	res->we = mlx_load_png(dict_get(res->dict, "WE\0", "\0"));
+	if (!res->no || !res->so || !res->ea || !res->we)
+		return (error_exit(res), NULL);
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image,0, 0);
-//	res->observerPosition = malloc(sizeof(t_vector));
-//	res->observerPosition->x = 16.5f;
-//	res->observerPosition->y = 2.5f;
-//	res->pointOfView = malloc(sizeof(t_vector));
-//	res->pointOfView->x = res->observerPosition->x;
-//	res->pointOfView->y = res->observerPosition->y + 1.5f + VIEW_POINT_DIST;
 	return (res);
 }
 
@@ -90,29 +110,6 @@ void rotate_point(t_settings *settings, float theta)
 	// Translate point back to original position
 	settings->pointOfView->x = new_x + settings->observerPosition->x;
 	settings->pointOfView->y = new_y + settings->observerPosition->y;
-}
-
-void draw_line(t_settings *settings, int x1, int y1, int x2, int y2, uint32_t color) {
-	int dx = abs(x2 - x1);
-	int dy = abs(y2 - y1);
-	int sx = x1 < x2 ? 1 : -1;
-	int sy = y1 < y2 ? 1 : -1;
-	int err = dx - dy;
-
-	while (x1 != x2 || y1 != y2) {
-		put_pixel(settings, x1, y1, color);
-		int e2 = 2 * err;
-		if (e2 > -dy) 
-		{
-			err -= dy;
-			x1 += sx;
-		}
-		if (e2 < dx) 
-		{
-			err += dx;
-			y1 += sy;
-		}
-	}
 }
 
 void draw_line_floor_sky(t_settings *settings, int x)
@@ -156,12 +153,6 @@ void draw_line_floor_sky(t_settings *settings, int x)
 
 void move(t_settings *settings, float x, float y)
 {
-//	if (!settings->map->grid[(int) (settings->observerPosition->x + x)][(int) (settings->observerPosition->y + y)]) {
-//		settings->observerPosition->x += x;
-//		settings->observerPosition->y += y;
-//		settings->pointOfView->x += x;
-//		settings->pointOfView->y += y;
-//	}
 	if (settings->map->grid[(int) (settings->observerPosition->y)][(int) (settings->observerPosition->x + x)] == '0') 
 	{
 		settings->observerPosition->x += x;
@@ -192,7 +183,8 @@ float min(float a, float b)
 	return b;
 }
 
-void move_character(t_settings *settings, float move_dir) {
+void move_character(t_settings *settings, float move_dir) 
+{
 	// Calculate unit vector in the view direction
 	float d_x = settings->pointOfView->x - settings->observerPosition->x;
 	float d_y = settings->pointOfView->y - settings->observerPosition->y;
@@ -221,52 +213,39 @@ float vector_dot(t_vector v1, t_vector v2) {
 	return v1.x * v2.x + v1.y * v2.y;
 }
 
+void	draw_direction(t_settings *settings, t_march_return *march, float d)
+{
+	int			height;
+	height = RANDOM / (march->distance + SMALL);
+	if (march->direction == SO)
+		draw_texture_line(settings, settings->so, march->shift, height, d);
+	if (march->direction == EA)
+		draw_texture_line(settings, settings->ea, march->shift, height, d);
+	if (march->direction == NO)
+		draw_texture_line(settings, settings->no, march->shift, height, d);
+	if (march->direction == WE)
+		draw_texture_line(settings, settings->we, march->shift, height, d);
+	if(march->direction == 5)
+		draw_line_floor_sky(settings, d);
+}
+
 void	draw_walls(t_settings *settings)
 {
-	float		f;
 	float		d;
 	float		angle;
-	float		distance;
 	t_vector	direction;
 	t_march_return march;
 
-//	f = -WIDTH / (M_PI);
-	f = -1 / (FOV_1);
 	d = WIDTH;
 	angle = -FOV_HALF;
-//	while (angle < FOV_HALF)
 	while (d >= 0)
 	{
-
 		direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
 		rayMarch(*settings->observerPosition, direction, settings->map, &march);
 		march.distance *= cosf(angle);
-		if (march.direction == SO)
-		{
-			draw_texture_line(settings, settings->so, march.shift, RANDOM / (march.distance + 0.00001f),
-							  d);
-		}
-		if (march.direction == EA)
-		{
-			draw_texture_line(settings, settings->ea, march.shift, RANDOM / (march.distance + 0.00001f),
-							  d);
-		}
-		if (march.direction == NO)
-		{
-			draw_texture_line(settings, settings->no, march.shift, RANDOM / (march.distance + 0.00001f),
-							  d);
-		}
-		if (march.direction == WE)
-		{
-			draw_texture_line(settings, settings->we, march.shift, RANDOM / (march.distance + 0.00001f),
-							  d);
-		}
-		if(march.direction == 5)
-			draw_line_floor_sky(settings, d);
+		draw_direction(settings, &march, d);
 		d = d - 1;
 		angle += FOV_1 / WIDTH;
-
-
 	}
 }
 
@@ -283,72 +262,70 @@ void	draw_sky_floor(t_settings *settings, bool start)
 	
 }
 
+void	reset_view(t_settings *settings)
+{
+	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
+		settings->pointOfView->x = settings->observerPosition->x;
+}
+
 void ft_hook(void* param)
 {
 	t_settings* settings = param;
-	bool moved;
 
 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
-	{moved = true;mlx_close_window(settings->mlx);}
+		mlx_close_window(settings->mlx);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
-	{moved = true;move_character(settings, RIGHT);}
+		move_character(settings, RIGHT);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_A))
-	{moved = true;move_character(settings, LEFT);}
+		move_character(settings, LEFT);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_W))
-	{moved = true;move_character(settings, FORWARD);}
+		move_character(settings, FORWARD);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_S))
-	{moved = true;move_character(settings, BACKWARD);}
+		move_character(settings, BACKWARD);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_E))
-	{moved = true;rotate_point(settings, TURN_ANGLE);}
+		rotate_point(settings, TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Q))
-	{moved = true;rotate_point(settings, -TURN_ANGLE);}
+		rotate_point(settings, -TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
-	{	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
-		settings->pointOfView->x = settings->observerPosition->x; moved = true;}
-	if (moved)
-	{
-		draw_sky_floor(settings, false);
-		draw_walls(settings);
-	}
+		reset_view(settings);
+	draw_sky_floor(settings, false);
+	draw_walls(settings);
 	usleep(10000);
 }
 
- void autopilot(void *param)
- {
- 	t_settings* settings = param;
-	 t_march_return march;
+//  void autopilot(void *param)
+//  {
+//  	t_settings* settings = param;
+// 	 t_march_return march;
 
- 	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-	 draw_sky_floor(settings, false);
+//  	print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
+// 	 draw_sky_floor(settings, false);
 
- 	float angle = -0.5f * M_PI;
- 	t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
- 	rayMarch(*settings->observerPosition, direction, settings->map, &march);
-	float distance = march.distance;
- 	angle = 0;
- 	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
- 	rayMarch(*settings->observerPosition, direction, settings->map, &march);
-	float distance2 = march.distance;
- 	angle = 0.5f * M_PI;
- 	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
- 	rayMarch(*settings->observerPosition, direction, settings->map, &march);
-	float distance3 = march.distance;
- 	if (distance3 + distance + distance2 < 1) {
-		rotate_point(settings, 0.06f);
-		move_character(settings, BACKWARD);
-	}
- 	else if (distance > distance2 && distance > distance3)
- 		rotate_point(settings, 0.02f);
- 	else if (distance3 > distance2 && distance3 > distance)
- 		rotate_point(settings, -0.02f);
-//	 if (distance2 > 0.5f)
-	move_character(settings, FORWARD);
-	 draw_walls(settings);
- }
-
-//void draw_minimap(t_settings *settings, )
+//  	float angle = -0.5f * M_PI;
+//  	t_vector direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+// 	float distance = march.distance;
+//  	angle = 0;
+//  	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+// 	float distance2 = march.distance;
+//  	angle = 0.5f * M_PI;
+//  	direction = getRayDirection(*settings->observerPosition, *settings->pointOfView, angle);
+//  	rayMarch(*settings->observerPosition, direction, settings->map, &march);
+// 	float distance3 = march.distance;
+//  	if (distance3 + distance + distance2 < 1) {
+// 		rotate_point(settings, 0.06f);
+// 		move_character(settings, BACKWARD);
+// 	}
+//  	else if (distance > distance2 && distance > distance3)
+//  		rotate_point(settings, 0.02f);
+//  	else if (distance3 > distance2 && distance3 > distance)
+//  		rotate_point(settings, -0.02f);
+// //	 if (distance2 > 0.5f)
+// 	move_character(settings, FORWARD);
+// 	 draw_walls(settings);
+//  }
 
 void	check_leaks(void)
 {
@@ -377,18 +354,25 @@ void	clean_settings(t_settings *settings)
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
+	if (settings->observerPosition)
+		free(settings->observerPosition);
+	if (settings->pointOfView)
+		free(settings->pointOfView);
+	free(settings);
 }
 
 int main(int argc, char **argv)
 {
-
-	t_settings *settings = init_settings();
+	t_settings *settings;
 
 	atexit(check_leaks);
+	if (argc == 2)
+		settings = init_settings(argv[1]);
+	else
+		ft_putstr_fd("Error\nWrong input\n",2);
 	if(settings)
 	{
 //		 print_map(settings->map, settings->observerPosition->x, settings->observerPosition->y, settings->pointOfView->x, settings->pointOfView->y);
-
 		draw_sky_floor(settings, true);
 		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);

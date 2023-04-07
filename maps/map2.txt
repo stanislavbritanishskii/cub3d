@@ -1,11 +1,11 @@
 
-NO western.png
+NO textures/western.png
 
-SO bluestone.png
+SO textures/bluestone.png
 
-WE green.png
+WE textures/green.png
 
-EA black.png
+EA textures/black.png
 
 F 189,160,69
 C 128,128,223
