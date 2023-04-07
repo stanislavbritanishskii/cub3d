@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 21:18:30 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 22:18:35 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ void	error_exit(t_settings *settings)
 		mlx_delete_texture(settings->ea);
 	if (settings->we)
 		mlx_delete_texture(settings->we);
-	if (settings->observerPosition)
-		free(settings->observerPosition);
-	if (settings->pointOfView)
-		free(settings->pointOfView);
+	if (settings->observer_position)
+		free(settings->observer_position);
+	if (settings->point_of_view)
+		free(settings->point_of_view);
 	free(settings);
 	ft_putstr_fd("Error\n", 2);
 }
@@ -76,8 +76,8 @@ void	null_all(t_settings *res)
 	res->so = NULL;
 	res->ea = NULL;
 	res->we = NULL;
-	res->pointOfView = NULL;
-	res->observerPosition = NULL;
+	res->point_of_view = NULL;
+	res->observer_position = NULL;
 }
 
 bool	create_color(t_settings *res, char key)
@@ -138,14 +138,14 @@ void	rotate_point(t_settings *settings, float theta)
 {
 	t_rotation	rotate;
 
-	rotate.x = settings->pointOfView->x - settings->observerPosition->x;
-	rotate.y = settings->pointOfView->y - settings->observerPosition->y;
+	rotate.x = settings->point_of_view->x - settings->observer_position->x;
+	rotate.y = settings->point_of_view->y - settings->observer_position->y;
 	rotate.cos_theta = cosf(theta);
 	rotate.sin_theta = sinf(theta);
 	rotate.new_x = rotate.x * rotate.cos_theta - rotate.y * rotate.sin_theta;
 	rotate.new_y = rotate.x * rotate.sin_theta + rotate.y * rotate.cos_theta;
-	settings->pointOfView->x = rotate.new_x + settings->observerPosition->x;
-	settings->pointOfView->y = rotate.new_y + settings->observerPosition->y;
+	settings->point_of_view->x = rotate.new_x + settings->observer_position->x;
+	settings->point_of_view->y = rotate.new_y + settings->observer_position->y;
 }
 
 int	get_color(uint32_t color, float darkness)
@@ -196,28 +196,28 @@ void	draw_line_floor_sky(t_settings *settings, int x)
 
 void	move(t_settings *settings, float x, float y)
 {
-	if (settings->map->grid[(int)(settings->observerPosition->y)]
-		[(int)(settings->observerPosition->x + x)] == '0')
+	if (settings->map->grid[(int)(settings->observer_position->y)]
+		[(int)(settings->observer_position->x + x)] == '0')
 	{
-		settings->observerPosition->x += x;
-		settings->pointOfView->x += x;
-		if (settings->map->grid[(int)(settings->observerPosition->y + y)]
-			[(int)(settings->observerPosition->x)] == '0')
+		settings->observer_position->x += x;
+		settings->point_of_view->x += x;
+		if (settings->map->grid[(int)(settings->observer_position->y + y)]
+			[(int)(settings->observer_position->x)] == '0')
 		{
-			settings->observerPosition->y += y;
-			settings->pointOfView->y += y;
+			settings->observer_position->y += y;
+			settings->point_of_view->y += y;
 		}
 	}
-	else if (settings->map->grid[(int)(settings->observerPosition->y + y)]
-		[(int)(settings->observerPosition->x)] == '0')
+	else if (settings->map->grid[(int)(settings->observer_position->y + y)]
+		[(int)(settings->observer_position->x)] == '0')
 	{
-		settings->observerPosition->y += y;
-		settings->pointOfView->y += y;
-		if (settings->map->grid[(int)(settings->observerPosition->y)]
-			[(int)(settings->observerPosition->x + x)] == '0')
+		settings->observer_position->y += y;
+		settings->point_of_view->y += y;
+		if (settings->map->grid[(int)(settings->observer_position->y)]
+			[(int)(settings->observer_position->x + x)] == '0')
 		{
-			settings->observerPosition->x += x;
-			settings->pointOfView->x += x;
+			settings->observer_position->x += x;
+			settings->point_of_view->x += x;
 		}
 	}
 }
@@ -235,8 +235,8 @@ void	move_character(t_settings *settings, float move_dir)
 	float	d_y;
 	float	delta;
 
-	d_x = settings->pointOfView->x - settings->observerPosition->x;
-	d_y = settings->pointOfView->y - settings->observerPosition->y;
+	d_x = settings->point_of_view->x - settings->observer_position->x;
+	d_y = settings->point_of_view->y - settings->observer_position->y;
 	delta = STEP_SIZE;
 	d_x *= delta;
 	d_y *= delta;
@@ -257,17 +257,19 @@ float	vector_dot(t_vector v1, t_vector v2)
 
 void	draw_direction(t_settings *settings, t_march_return *march, float d)
 {
-	int			height;
+	t_texture	texture;
 
-	height = RANDOM / (march->distance + SMALL);
+	texture.height = RANDOM / (march->distance + SMALL);
+	texture.x_shift = march->shift;
+	texture.d = d;
 	if (march->direction == SO)
-		draw_texture_line(settings, settings->so, march->shift, height, d);
+		draw_texture_line(settings, settings->so, &texture);
 	if (march->direction == EA)
-		draw_texture_line(settings, settings->ea, march->shift, height, d);
+		draw_texture_line(settings, settings->ea, &texture);
 	if (march->direction == NO)
-		draw_texture_line(settings, settings->no, march->shift, height, d);
+		draw_texture_line(settings, settings->no, &texture);
 	if (march->direction == WE)
-		draw_texture_line(settings, settings->we, march->shift, height, d);
+		draw_texture_line(settings, settings->we, &texture);
 	if (march->direction == 5)
 		draw_line_floor_sky(settings, d);
 }
@@ -280,16 +282,17 @@ void	draw_walls(t_settings *settings)
 	t_march_return	march;
 
 	d = WIDTH;
-	angle = -FOV_HALF;
+	angle = -0.15f * M_PI;
 	while (d >= 0)
 	{
-		direction = get_ray_direction(*settings->observerPosition,
-				*settings->pointOfView, angle);
-		ray_march(*settings->observerPosition, direction, settings->map, &march);
+		direction = get_ray_direction(*settings->observer_position,
+				*settings->point_of_view, angle);
+		ray_march(*settings->observer_position,
+			direction, settings->map, &march);
 		march.distance *= cosf(angle);
 		draw_direction(settings, &march, d);
 		d = d - 1;
-		angle += FOV_1 / WIDTH;
+		angle += 0.3f * M_PI / WIDTH;
 	}
 }
 
@@ -307,8 +310,9 @@ void	draw_sky_floor(t_settings *settings, bool start)
 
 void	reset_view(t_settings *settings)
 {
-	settings->pointOfView->y = settings->observerPosition->y + VIEW_POINT_DIST;
-		settings->pointOfView->x = settings->observerPosition->x;
+	settings->point_of_view->y = settings->observer_position->y
+		+ VIEW_POINT_DIST;
+		settings->point_of_view->x = settings->observer_position->x;
 }
 
 void	ft_hook(void *param)
@@ -316,9 +320,9 @@ void	ft_hook(void *param)
 	t_settings	*settings;
 
 	settings = param;
-	print_map(settings->map, settings->observerPosition->x,
-		settings->observerPosition->y, settings->pointOfView->x,
-		settings->pointOfView->y);
+	print_map(settings->map, settings->observer_position->x,
+		settings->observer_position->y, settings->point_of_view->x,
+		settings->point_of_view->y);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(settings->mlx);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
@@ -343,25 +347,27 @@ void	ft_hook(void *param)
 //  {
 //  	t_settings* settings = param;
 // 	 	t_march_return march;
-//  	print_map(settings->map, settings->observerPosition->x,
-// 			settings->observerPosition->y, 
-//		settings->pointOfView->x, settings->pointOfView->y);
+//  	print_map(settings->map, settings->observer_position->x,
+// 			settings->observer_position->y, 
+//		settings->point_of_view->x, settings->point_of_view->y);
 // 	 	draw_sky_floor(settings, false);
-
 //  	float angle = -0.5f * M_PI;
-//  	t_vector direction = get_ray_direction#(*settings->observerPosition,
-// *settings->pointOfView, angle);
-//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
+//  	t_vector direction = get_ray_direction#(*settings->observer_position,
+// *settings->point_of_view, angle);
+//  	ray_march(*settings->observer_position,
+		// direction, settings->map, &march);
 // 	float distance = march.distance;
 //  	angle = 0;
-//  	direction = get_ray_direction#(*settings->observerPosition,
-//		*settings->pointOfView, angle);
-//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
+//  	direction = get_ray_direction#(*settings->observer_position,
+//		*settings->point_of_view, angle);
+//  	ray_march(*settings->observer_position,
+	//  direction, settings->map, &march);
 // 	float distance2 = march.distance;
 //  	angle = 0.5f * M_PI;
-//  	direction = get_ray_direction#(*settings->observerPosition, 
-//			*settings->pointOfView, angle);
-//  	ray_march(*settings->observerPosition, direction, settings->map, &march);
+//  	direction = get_ray_direction#(*settings->observer_position, 
+//			*settings->point_of_view, angle);
+//  	ray_march(*settings->observer_position,
+// direction, settings->map, &march);
 // 	float distance3 = march.distance;
 //  	if (distance3 + distance + distance2 < 1) {
 // 		rotate_point(settings, 0.06f);
@@ -403,10 +409,10 @@ void	clean_settings(t_settings *settings)
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
-	if (settings->observerPosition)
-		free(settings->observerPosition);
-	if (settings->pointOfView)
-		free(settings->pointOfView);
+	if (settings->observer_position)
+		free(settings->observer_position);
+	if (settings->point_of_view)
+		free(settings->point_of_view);
 	free(settings);
 }
 

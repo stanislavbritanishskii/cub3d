@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 21:27:27 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 22:10:15 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ int	get_map_value(int x, int y, t_map *map)
 	return (map->grid[y][x] - '0');
 }
 
-t_vector	get_ray_direction(t_vector observerPosition,
-	t_vector pointOfView, float angle)
+t_vector	get_ray_direction(t_vector observer_position,
+	t_vector point_of_view, float angle)
 {
 	t_vector	ray_direction;
 	t_vector	ray_direction_rotated;
@@ -126,8 +126,8 @@ t_vector	get_ray_direction(t_vector observerPosition,
 	float		cos_angle;
 	float		length;
 
-	ray_direction.x = pointOfView.x - observerPosition.x;
-	ray_direction.y = pointOfView.y - observerPosition.y;
+	ray_direction.x = point_of_view.x - observer_position.x;
+	ray_direction.y = point_of_view.y - observer_position.y;
 	length = sqrtf(ray_direction.x * ray_direction.x
 			+ ray_direction.y * ray_direction.y);
 	ray_direction.x /= length;

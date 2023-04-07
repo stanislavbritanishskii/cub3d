@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 20:31:03 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 22:10:19 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,29 +125,29 @@ bool	wrong_char(char element)
 
 void	set_player(t_settings *settings, t_map *map, int x, int y)
 {
-	settings->observerPosition = malloc(sizeof(t_vector));
-	settings->pointOfView = malloc(sizeof(t_vector));
-	settings->observerPosition->x = x + 0.5f;
-	settings->observerPosition->y = y + 0.5f;
+	settings->observer_position = malloc(sizeof(t_vector));
+	settings->point_of_view = malloc(sizeof(t_vector));
+	settings->observer_position->x = x + 0.5f;
+	settings->observer_position->y = y + 0.5f;
 	if (map->grid[y][x] == 'N')
 	{
-		settings->pointOfView->x = x + 0.5f;
-		settings->pointOfView->y = y + 0.5 - VIEW_POINT_DIST;
+		settings->point_of_view->x = x + 0.5f;
+		settings->point_of_view->y = y + 0.5 - VIEW_POINT_DIST;
 	}
 	if (map->grid[y][x] == 'S')
 	{
-		settings->pointOfView->x = x + 0.5f;
-		settings->pointOfView->y = y + 0.5 + VIEW_POINT_DIST;
+		settings->point_of_view->x = x + 0.5f;
+		settings->point_of_view->y = y + 0.5 + VIEW_POINT_DIST;
 	}
 	if (map->grid[y][x] == 'E')
 	{
-		settings->pointOfView->x = x + 0.5f + VIEW_POINT_DIST;
-		settings->pointOfView->y = y + 0.5;
+		settings->point_of_view->x = x + 0.5f + VIEW_POINT_DIST;
+		settings->point_of_view->y = y + 0.5;
 	}
 	if (map->grid[y][x] == 'W')
 	{
-		settings->pointOfView->x = x + 0.5f - VIEW_POINT_DIST;
-		settings->pointOfView->y = y + 0.5;
+		settings->point_of_view->x = x + 0.5f - VIEW_POINT_DIST;
+		settings->point_of_view->y = y + 0.5;
 	}
 }
 
@@ -182,12 +182,12 @@ bool	check_final_map(t_map *map, t_settings *settings)
 
 void	free_vectors(t_settings *settings)
 {
-	if (settings->observerPosition)
-		free(settings->observerPosition);
-	settings->observerPosition = NULL;
-	if (settings->pointOfView)
-		free(settings->pointOfView);
-	settings->pointOfView = NULL;
+	if (settings->observer_position)
+		free(settings->observer_position);
+	settings->observer_position = NULL;
+	if (settings->point_of_view)
+		free(settings->point_of_view);
+	settings->point_of_view = NULL;
 }
 
 void	read_map_error(char *str, t_dict *dict)
