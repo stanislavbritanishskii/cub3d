@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 22:16:50 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 23:01:27 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,34 +113,88 @@ typedef struct s_settings
 
 //functions
 
-//test version
+//init.c
+void			null_all(t_settings *res);
+t_settings		*init_settings(char *path);
+void			error_exit(t_settings *settings);
+
+//color.c
+unsigned long	create_rgba(char **splitted, bool *check);
+bool			create_color(t_settings *res, char key);
+int				get_color(uint32_t color, float darkness);
+int				splitted_len(char **splitted);
+
+//draw_wall.c
+void			draw_walls(t_settings *settings);
+void			draw_direction(t_settings *settings,
+					t_march_return *march, float d);
+void			draw_sky_floor(t_settings *settings, bool start);
+void			draw_line_floor_sky(t_settings *settings, int x);
+void			put_pixel(t_settings *settings, int x, int y, uint32_t color);
+
+//move_rotate.c
+void			move(t_settings *settings, float x, float y);
+void			move_character(t_settings *settings, float move_dir);
+void			rotate_point(t_settings *settings, float theta);
+void			reset_view(t_settings *settings);
+
+//clean.c
+void			clean_settings(t_settings *settings);
+void			clean_map(t_map *map);
+void			free_vectors(t_settings *settings);
+//checks.c
+int				map_extension_correct(char *map_path);
+bool			is_player(char element);
+bool			wrong_char(char element);
+bool			check_dict_filled(t_dict *dict);
+bool			check_final_map(t_map *map, t_settings *settings);
+
+//create_map.c
+t_map			*create_final_map(char **i_map);
+char			**create_initial_map(int fd);
+void			get_max_width(t_map *res, int *height, char **i_map);
+
+//read_map.c
+void			set_player(t_settings *settings, t_map *map, int x, int y);
 bool			read_map(t_settings *settings, char *path);
-//wall checks
-int				check_wall_down(float x, float y, t_map *map);
-int				check_wall_left(float x, float y, t_map *map);
-int				check_wall_right(float x, float y, t_map *map);
-int				check_wall_up(float x, float y, t_map *map);
+bool			initial_parsing(t_dict *dict, char *path, int fd);
+bool			add_to_dict(char *str, t_dict *dict);
+void			read_map_error(char *str, t_dict *dict);
+
+//math_utils.c
+float			distance_to_grid(float a);
+float			abs_float(float a);
+float			min(float a, float b);
 int				get_map_value(int x, int y, t_map *map);
-t_vector		get_ray_direction(t_vector observer_position,
-					t_vector point_of_view, float angle);
+
+//map_check.c
+bool			dfs(t_map *map, int x, int y);
+bool			map_is_closed(t_map *map);
+void			find_player(t_map *map, t_map *local, int *x, int *y);
+t_map			*copy_map(t_map *orig);
+
+//utils.c
 t_march_return	*ray_march(t_vector position, t_vector direction,
 					t_map *map, t_march_return *res);
-// debug functions
+void			hit_a_wall(t_vector position, t_vector direction,
+					t_map *map, t_march_return *res);
+bool			incredible_check(t_vector position, t_vector direction,
+					t_map *map, t_march_return *res);
+t_vector		get_ray_direction(t_vector observer_position,
+					t_vector point_of_view, float angle);
 void			print_map(t_map *map, float x, float y, float x2, float y2);
-// dict functions;
+
+// dict.c;
 t_dict			*init_dict(void);
 void			dict_add(t_dict *dict, char *key, char *value);
 char			*dict_get(t_dict *dict, char *key, char *default_return);
 void			dict_delete(t_dict *dict, char *key);
 void			free_dict(t_dict *dict);
-//draw functions
 
-void			put_pixel(t_settings *settings, int x, int y, uint32_t color);
+//textures.c
+static int		lookup_color(mlx_texture_t *texture,
+					int x_coord, int y_coord, float darkness);
 void			draw_texture_line(t_settings *settings,
 					mlx_texture_t *texture, t_texture *info);
-// map functions
-
-bool			map_is_closed(t_map *map);
-void			clean_map(t_map *map);
 
 #endif

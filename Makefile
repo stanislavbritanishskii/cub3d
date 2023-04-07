@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sbritani <sbritani@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/21 20:12:24 by sbritani          #+#    #+#              #
-#    Updated: 2022/12/22 10:52:47 by sbritani         ###   ########.fr        #
+#    Updated: 2023/04/07 23:00:27 by dhendzel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,20 @@ OBJ_DIR	:= obj/
 # HEADS	:=
 NAME	:= cub3d
 
-	SRC		:=	checks.c main.c read_map.c utils.c dict.c textures.c
+SRC		:= checks.c \
+			main.c \
+			read_map.c \
+			utils.c dict.c \
+			textures.c \
+			init.c \
+			color.c \
+			draw_wall.c \
+			clean.c \
+			create_map.c \
+			move_rotate.c \
+			map_check.c \
+			math_utils.c \
+				
 
 OBJ		:=	$(addprefix $(OBJ_DIR), $(patsubst %.c, %.o, $(SRC)))
 
@@ -38,6 +51,9 @@ $(OBJ_DIR):
 
 libft:
 	make --directory=./libs/libft
+
+norm:
+	norminette $(SRC) cub.h
 
 clean:
 	make clean --directory=libs/libft/

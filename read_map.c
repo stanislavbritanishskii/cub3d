@@ -6,122 +6,11 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 22:10:19 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/07 22:42:04 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
-
-char	**create_initial_map(int fd)
-{
-	char	**res;
-	char	*str;
-	int		len;
-
-	res = NULL;
-	str = get_next_line(fd);
-	while (str && ft_strlen(str) == 1)
-	{
-		free (str);
-		str = get_next_line(fd);
-	}
-	len = 0;
-	while (str)
-	{
-		res = add_string_to_string_arr(str, res, len);
-		len++;
-		free(str);
-		str = get_next_line(fd);
-	}
-	return (res);
-}
-
-void	get_max_width(t_map *res, int *height, char **i_map)
-{
-	int	width;
-
-	width = 0;
-	*height = 0;
-	while (i_map[*height])
-	{
-		if (ft_strlen(i_map[*height]) > width)
-			width = ft_strlen(i_map[*height]);
-		*height = *height + 1;
-	}
-	res->y_size = *height;
-	res->x_size = width - 1;
-	res->grid = malloc(sizeof (char *) * *height);
-	*height = *height - 1;
-}
-
-t_map	*create_final_map(char **i_map)
-{
-	t_map	*res;
-	int		height;
-	int		iterator;
-
-	res = malloc(sizeof(t_map));
-	get_max_width(res, &height, i_map);
-	while (height >= 0)
-	{
-		res->grid[height] = malloc(sizeof(char) * res->x_size + 1);
-		iterator = 0;
-		while (iterator < res->x_size + 1)
-		{
-			if (ft_strlen(i_map[height]) > iterator)
-				res->grid[height][iterator] = (i_map[height][iterator]);
-			else
-				res->grid[height][iterator] = '0';
-			if (res->grid[height][iterator] == ' '
-				|| res->grid[height][iterator] == '\n')
-				res->grid[height][iterator] = '0';
-			iterator++;
-		}
-		height--;
-	}
-	ft_split_clear(i_map);
-	return (res);
-}
-
-bool	check_dict_filled(t_dict *dict)
-{
-	return (dict_get(dict, "NO\0", "\0")[0] *
-		dict_get(dict, "SO\0", "\0")[0] *
-		dict_get(dict, "EA\0", "\0")[0] *
-		dict_get(dict, "WE\0", "\0")[0] *
-		dict_get(dict, "F\0", "\0")[0] *
-		dict_get(dict, "C\0", "\0")[0]);
-}
-
-int	splitted_len(char **splitted)
-{
-	int	i;
-
-	if (!splitted)
-		return (0);
-	i = 0;
-	while (splitted[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-bool	is_player(char element)
-{
-	if (element == 'S' || element == 'E' || element == 'W' || element == 'N')
-		return (true);
-	else
-		return (false);
-}
-
-bool	wrong_char(char element)
-{
-	if (element == '1' || element == '0' || is_player(element))
-		return (false);
-	else
-		return (true);
-}
 
 void	set_player(t_settings *settings, t_map *map, int x, int y)
 {
@@ -149,45 +38,6 @@ void	set_player(t_settings *settings, t_map *map, int x, int y)
 		settings->point_of_view->x = x + 0.5f - VIEW_POINT_DIST;
 		settings->point_of_view->y = y + 0.5;
 	}
-}
-
-bool	check_final_map(t_map *map, t_settings *settings)
-{
-	int	x;
-	int	y;
-	int	counter;
-
-	counter = 0;
-	y = 0;
-	while (y < map->y_size)
-	{
-		x = 0;
-		while (x < map->x_size)
-		{
-			if (wrong_char(map->grid[y][x]))
-				return (false);
-			if (is_player(map->grid[y][x]))
-			{
-				if (!counter++)
-					set_player(settings, map, x, y);
-			}
-			x++;
-		}
-		y++;
-	}
-	if (counter != 1)
-		return (false);
-	return (true);
-}
-
-void	free_vectors(t_settings *settings)
-{
-	if (settings->observer_position)
-		free(settings->observer_position);
-	settings->observer_position = NULL;
-	if (settings->point_of_view)
-		free(settings->point_of_view);
-	settings->point_of_view = NULL;
 }
 
 void	read_map_error(char *str, t_dict *dict)
