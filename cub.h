@@ -109,6 +109,8 @@ typedef struct s_settings
 	mlx_t			*mlx;
 	mlx_image_t		*image;
 	t_map			*map;
+	int				counter;
+	int				max_counter;
 }	t_settings;
 
 //functions
@@ -182,7 +184,7 @@ bool			incredible_check(t_vector position, t_vector direction,
 					t_map *map, t_march_return *res);
 t_vector		get_ray_direction(t_vector observer_position,
 					t_vector point_of_view, float angle);
-void			print_map(t_map *map, float x, float y, float x2, float y2);
+void			print_map(t_map *map, t_vector *player, t_vector *view);
 
 // dict.c;
 t_dict			*init_dict(void);

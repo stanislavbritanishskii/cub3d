@@ -17,9 +17,8 @@ void	ft_hook(void *param)
 	t_settings	*settings;
 
 	settings = param;
-	print_map(settings->map, settings->observer_position->x,
-		settings->observer_position->y, settings->point_of_view->x,
-		settings->point_of_view->y);
+	print_map(settings->map, settings->observer_position,
+		settings->point_of_view);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
 		mlx_close_window(settings->mlx);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_D))
@@ -37,6 +36,7 @@ void	ft_hook(void *param)
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 		reset_view(settings);
 	draw_sky_floor(settings, false);
+	settings->counter--;
 	draw_walls(settings);
 	usleep(10000);
 }

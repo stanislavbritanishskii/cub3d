@@ -45,6 +45,8 @@ t_settings	*init_settings(char *path)
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image, 0, 0);
+	res->counter = 1000000;
+	res->max_counter = 1000000;
 	return (res);
 }
 

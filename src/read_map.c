@@ -91,7 +91,7 @@ bool	read_map(t_settings *settings, char *path)
 	int		fd;
 
 	fd = open(path, 'r');
-	if (fd < 0)
+	if (fd < 0 || !map_extension_correct(path))
 		return (false);
 	dict = init_dict();
 	if (!initial_parsing(dict, path, fd))

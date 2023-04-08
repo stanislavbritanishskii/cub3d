@@ -12,7 +12,7 @@
 
 #include "../cub.h"
 
-void	print_map(t_map *map, float x, float y, float x2, float y2)
+void	print_map(t_map *map, t_vector *player, t_vector *view)
 {
 	int	i;
 	int	j;
@@ -23,9 +23,9 @@ void	print_map(t_map *map, float x, float y, float x2, float y2)
 		i = 0;
 		while (i < map->x_size)
 		{
-			if ((int)x == i && (int)y == j)
+			if ((int)player->x == i && (int)player->y == j)
 				printf("\033[31mP\033[0m");
-			else if ((int)x2 == i && (int)y2 == j)
+			else if ((int)view->x == i && (int)view->y == j)
 				printf("\033[34mV\033[0m");
 			else
 				printf("%c", map->grid[j][i]);
