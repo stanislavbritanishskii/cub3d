@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/09 17:10:08 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 20:24:56 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define WE 1
 # define EA 2
 # define VIEW_POINT_DIST 2
-# define MAX_DISTANCE 5
+# define MAX_DISTANCE 10
 # define STEP_SIZE 0.05f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
