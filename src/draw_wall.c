@@ -26,8 +26,8 @@ void	draw_line_floor_sky(t_settings *settings, int x)
 	i = 0;
 	while (i < HEIGHT / 2)
 	{
-		darkness = 1 - (((float)RANDOM
-					/ ((float)HEIGHT / 2 - i)) / (float) MAX_DISTANCE);
+		darkness = 1 - (((float)RANDOM / ((float)HEIGHT / 2 - i))
+				/ (float) settings->max_distance);
 		if (darkness < 0)
 			darkness = 0;
 		color = get_color(settings->ceiling_color, darkness);
@@ -36,8 +36,8 @@ void	draw_line_floor_sky(t_settings *settings, int x)
 	}
 	while (i < HEIGHT)
 	{
-		darkness = 1 - (((float)RANDOM
-					/ ((float)i - (float)HEIGHT / 2)) / (float) MAX_DISTANCE);
+		darkness = 1 - (((float)RANDOM / ((float)i
+						- (float)HEIGHT / 2)) / (float) settings->max_distance);
 		if (darkness < 0)
 			darkness = 0;
 		color = get_color(settings->floor_color, darkness);
@@ -78,7 +78,7 @@ void	draw_walls(t_settings *settings)
 	{
 		direction = get_ray_direction(*settings->observer_position,
 				*settings->point_of_view, angle);
-		ray_march(*settings->observer_position,
+		ray_march(settings,
 			direction, settings->map, &march);
 		march.distance *= cosf(angle);
 		draw_direction(settings, &march, d);

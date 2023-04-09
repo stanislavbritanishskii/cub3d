@@ -12,34 +12,6 @@
 
 #include "../cub.h"
 
-void	check_music(t_settings *settings)
-{
-	struct timeval	time;
-	long			micsec;
-	static long		music_start = 0;
-	static int		scream = 0;
-
-	gettimeofday(&time, NULL);
-	micsec = time.tv_sec * 1000 + time.tv_usec / 1000;
-	if (time.tv_sec > music_start + 5)
-	{
-		music_start = time.tv_sec;
-		if (scream == 0)
-			system("afplay -v 0.5 ./music/background.mp3 &");
-		else if (scream == 1)
-		{
-			system("pkill afplay &");
-			mlx_image_to_window(settings->mlx, settings->screamer, 0, 0);
-			system("afplay -v 0.5 ./music/scream.mp3 &");
-			scream = 2;
-		}
-		else
-			settings->screamer->enabled = false;
-		if (scream == 0)
-			scream = 1;
-	}
-}
-
 void	ft_hook(void *param)
 {
 	t_settings		*settings;

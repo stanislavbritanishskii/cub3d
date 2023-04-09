@@ -108,30 +108,31 @@ void	hit_a_wall(t_vector position, t_vector direction,
 	}		
 }
 
-t_march_return	*ray_march(t_vector position,
+t_march_return	*ray_march(t_settings *settings,
 		t_vector direction, t_map *map, t_march_return *res)
 {
-	float	step;
-	int		map_x;
-	int		map_y;
+	float		step;
+	int			map_x;
+	int			map_y;
+	t_vector	position;
 
+	position.x = settings->observer_position->x;
+	position.y = settings->observer_position->y;
 	step = RAY_STEP_SIZE;
 	res->distance = 0;
-	while (res->distance < MAX_DISTANCE)
+	while (res->distance < settings->max_distance)
 	{
 		map_x = (int)position.x;
 		map_y = (int)position.y;
 		if (get_map_value(map_x, map_y, map) == 1)
 			return (hit_a_wall(position, direction, map, res), res);
-		if (res->distance >= BIG_DISTANCE)
-			step = RAY_STEP_SIZE * 10;
-		if (res->distance >= BIG_DISTANCE * 10)
-			step = RAY_STEP_SIZE * 100;
+		step = RAY_STEP_SIZE * (1 + 9 * (res->distance >= BIG_DISTANCE)
+				* (1 + 9 * (res->distance >= BIG_DISTANCE * 10)));
 		res->distance += step;
 		position.x += direction.x * step;
 		position.y += direction.y * step;
 	}
-	res->distance = MAX_DISTANCE;
+	res->distance = settings->max_distance;
 	res->shift = 0.5f;
 	res->direction = 5;
 	return (res);

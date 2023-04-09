@@ -22,7 +22,7 @@
 
 # define HEIGHT			540
 # define WIDTH			860
-# define VIEW_DIST 3;
+# define TIMER 15
 # define FORWARD 1
 # define BACKWARD 2
 # define LEFT 3
@@ -32,7 +32,7 @@
 # define WE 1
 # define EA 2
 # define VIEW_POINT_DIST 2
-# define MAX_DISTANCE 10
+# define MAX_DISTANCE 15
 # define STEP_SIZE 0.05f
 # define RAY_STEP_SIZE 0.001f
 # define TURN_ANGLE 0.03f
@@ -112,8 +112,7 @@ typedef struct s_settings
 	mlx_t			*mlx;
 	mlx_image_t		*image;
 	t_map			*map;
-	int				counter;
-	int				max_counter;
+	int				max_distance;
 }	t_settings;
 
 //functions
@@ -179,8 +178,8 @@ void			find_player(t_map *map, t_map *local, int *x, int *y);
 t_map			*copy_map(t_map *orig);
 
 //utils.c
-t_march_return	*ray_march(t_vector position, t_vector direction,
-					t_map *map, t_march_return *res);
+t_march_return	*ray_march(t_settings *settings,
+					t_vector direction, t_map *map, t_march_return *res);
 void			hit_a_wall(t_vector position, t_vector direction,
 					t_map *map, t_march_return *res);
 bool			incredible_check(t_vector position, t_vector direction,
@@ -203,7 +202,8 @@ void			draw_texture_line(t_settings *settings,
 					mlx_texture_t *texture, t_texture *info);
 
 //main.c
-void			check_music(t_settings *settings);
 void			ft_hook(void *param);
 
+//music
+void			check_music(t_settings *settings);
 #endif

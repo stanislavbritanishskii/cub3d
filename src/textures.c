@@ -37,7 +37,8 @@ void	draw_texture_line(t_settings *settings,
 	float	darkness;
 
 	x = (int)(texture->width * info->x_shift);
-	darkness = 1 - (((float)RANDOM / info->height) / (float) MAX_DISTANCE);
+	darkness = 1 - (((float)RANDOM / info->height)
+			/ (float) settings->max_distance);
 	y_step = (float)texture->height / info->height;
 	y_image = 0;
 	if (HEIGHT / 2 - info->height / 2 + y_image < 0)

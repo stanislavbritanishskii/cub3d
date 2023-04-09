@@ -47,8 +47,7 @@ t_settings	*init_settings(char *path)
 	res->screamer = mlx_texture_to_image(res->mlx, res->screame);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image, 0, 0);
-	res->counter = 1000000;
-	res->max_counter = 1000000;
+	res->max_distance = MAX_DISTANCE;
 	return (res);
 }
 

@@ -33,6 +33,7 @@ SRC		:= checks.c \
 			move_rotate.c \
 			map_check.c \
 			math_utils.c \
+			music.c
 				
 OBJS = $(FIL:.c=.o)
 FIL =  $(addprefix src/, $(SRC)) 
