@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/09 17:03:10 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 22:08:55 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	ft_hook(void *param)
 		move_character(settings, FORWARD);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_S))
 		move_character(settings, BACKWARD);
-	if (mlx_is_key_down(settings->mlx, MLX_KEY_E))
+	if (mlx_is_key_down(settings->mlx, MLX_KEY_RIGHT))
 		rotate_point(settings, TURN_ANGLE);
-	if (mlx_is_key_down(settings->mlx, MLX_KEY_Q))
+	if (mlx_is_key_down(settings->mlx, MLX_KEY_LEFT))
 		rotate_point(settings, -TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 		reset_view(settings);
