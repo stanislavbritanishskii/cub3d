@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/09 22:08:55 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 00:12:22 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,55 +40,11 @@ void	ft_hook(void *param)
 	draw_walls(settings);
 	usleep(20000);
 }
-//  void autopilot(void *param)
-//  {
-//  	t_settings* settings = param;
-// 	 	t_march_return march;
-//  	print_map(settings->map, settings->observer_position->x,
-// 			settings->observer_position->y, 
-//		settings->point_of_view->x, settings->point_of_view->y);
-// 	 	draw_sky_floor(settings, false);
-//  	float angle = -0.5f * M_PI;
-//  	t_vector direction = get_ray_direction#(*settings->observer_position,
-// *settings->point_of_view, angle);
-//  	ray_march(*settings->observer_position,
-		// direction, settings->map, &march);
-// 	float distance = march.distance;
-//  	angle = 0;
-//  	direction = get_ray_direction#(*settings->observer_position,
-//		*settings->point_of_view, angle);
-//  	ray_march(*settings->observer_position,
-	//  direction, settings->map, &march);
-// 	float distance2 = march.distance;
-//  	angle = 0.5f * M_PI;
-//  	direction = get_ray_direction#(*settings->observer_position, 
-//			*settings->point_of_view, angle);
-//  	ray_march(*settings->observer_position,
-// direction, settings->map, &march);
-// 	float distance3 = march.distance;
-//  	if (distance3 + distance + distance2 < 1) {
-// 		rotate_point(settings, 0.06f);
-// 		move_character(settings, BACKWARD);
-// 	}
-//  	else if (distance > distance2 && distance > distance3)
-//  		rotate_point(settings, 0.02f);
-//  	else if (distance3 > distance2 && distance3 > distance)
-//  		rotate_point(settings, -0.02f);
-// //	 if (distance2 > 0.5f)
-// 	move_character(settings, FORWARD);
-// 	 draw_walls(settings);
-//  }
-
-void	check_leaks(void)
-{
-	system("leaks cub3d");
-}
 
 int	main(int argc, char **argv)
 {
 	t_settings	*settings;
 
-	atexit(check_leaks);
 	if (argc == 2)
 		settings = init_settings(argv[1]);
 	else
