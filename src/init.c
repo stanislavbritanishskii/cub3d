@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:25:47 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/09 16:13:30 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 22:07:27 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	null_all(t_settings *res)
 	res->no = NULL;
 	res->so = NULL;
 	res->ea = NULL;
+	res->screame = NULL;
 	res->we = NULL;
 	res->point_of_view = NULL;
 	res->observer_position = NULL;
@@ -65,6 +66,8 @@ void	error_exit(t_settings *settings)
 		mlx_delete_texture(settings->ea);
 	if (settings->we)
 		mlx_delete_texture(settings->we);
+	if (settings->screame)
+		mlx_delete_texture(settings->screame);
 	if (settings->observer_position)
 		free(settings->observer_position);
 	if (settings->point_of_view)
