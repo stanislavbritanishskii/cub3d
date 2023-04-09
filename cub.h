@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/09 17:02:50 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 17:10:08 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,5 +201,9 @@ int				lookup_color(mlx_texture_t *texture,
 					int x_coord, int y_coord, float darkness);
 void			draw_texture_line(t_settings *settings,
 					mlx_texture_t *texture, t_texture *info);
+
+//main.c
+void			check_music(t_settings *settings);
+void			ft_hook(void *param);
 
 #endif
