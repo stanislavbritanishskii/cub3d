@@ -6,13 +6,13 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 21:42:31 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:54:07 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 16:31:19 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub.h"
 
-static int	lookup_color(mlx_texture_t *texture,
+int	lookup_color(mlx_texture_t *texture,
 		int x_coord, int y_coord, float darkness)
 {
 	t_color	color;

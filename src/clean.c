@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:35:46 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:40 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 17:00:19 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,12 @@ void	clean_settings(t_settings *settings)
 	mlx_delete_texture(settings->so);
 	mlx_delete_texture(settings->ea);
 	mlx_delete_texture(settings->we);
+	mlx_delete_texture(settings->screame);
 	if (settings->observer_position)
 		free(settings->observer_position);
 	if (settings->point_of_view)
 		free(settings->point_of_view);
+	system("pkill afplay &");
 	free(settings);
 }
 

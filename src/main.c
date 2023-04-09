@@ -6,17 +6,46 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:55 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 17:03:10 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub.h"
 
+void	check_music(t_settings *settings)
+{
+	struct timeval	time;
+	long			micsec;
+	static long		music_start = 0;
+	static int		scream = 0;
+
+	gettimeofday(&time, NULL);
+	micsec = time.tv_sec * 1000 + time.tv_usec / 1000;
+	if (time.tv_sec > music_start + 5)
+	{
+		music_start = time.tv_sec;
+		if (scream == 0)
+			system("afplay -v 0.5 ./music/background.mp3 &");
+		else if (scream == 1)
+		{
+			system("pkill afplay &");
+			mlx_image_to_window(settings->mlx, settings->screamer, 0, 0);
+			system("afplay -v 0.5 ./music/scream.mp3 &");
+			scream = 2;
+		}
+		else
+			settings->screamer->enabled = false;
+		if (scream == 0)
+			scream = 1;
+	}
+}
+
 void	ft_hook(void *param)
 {
-	t_settings	*settings;
+	t_settings		*settings;
 
 	settings = param;
+	check_music(settings);
 	print_map(settings->map, settings->observer_position,
 		settings->point_of_view);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_ESCAPE))
@@ -36,9 +65,8 @@ void	ft_hook(void *param)
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 		reset_view(settings);
 	draw_sky_floor(settings, false);
-	settings->counter--;
 	draw_walls(settings);
-	usleep(10000);
+	usleep(20000);
 }
 //  void autopilot(void *param)
 //  {

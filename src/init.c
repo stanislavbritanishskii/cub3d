@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:25:47 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:54 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/09 16:13:30 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ t_settings	*init_settings(char *path)
 		return (error_exit(res), NULL);
 	if (!create_color(res, 'C') || !create_color(res, 'F'))
 		return (error_exit(res), NULL);
+	res->screame = mlx_load_png("./textures/screamer.png");
 	res->no = mlx_load_png(dict_get(res->dict, "NO\0", "\0"));
 	res->so = mlx_load_png(dict_get(res->dict, "SO\0", "\0"));
 	res->ea = mlx_load_png(dict_get(res->dict, "EA\0", "\0"));
@@ -43,6 +44,7 @@ t_settings	*init_settings(char *path)
 	if (!res->no || !res->so || !res->ea || !res->we)
 		return (error_exit(res), NULL);
 	res->mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true);
+	res->screamer = mlx_texture_to_image(res->mlx, res->screame);
 	res->image = mlx_new_image(res->mlx, WIDTH, HEIGHT);
 	mlx_image_to_window(res->mlx, res->image, 0, 0);
 	res->counter = 1000000;
