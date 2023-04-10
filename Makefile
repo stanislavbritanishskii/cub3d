@@ -6,13 +6,13 @@
 #    By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/21 20:12:24 by sbritani          #+#    #+#              #
-#    Updated: 2023/04/08 00:13:34 by dhendzel         ###   ########.fr        #
+#    Updated: 2023/04/10 02:38:17 by dhendzel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC		:= gcc
 FLAGS	:= -Wall -Wextra -Werror -I lib/include/ -I lib/ -I src/
-FLAGS	:= -I lib/include/ -I lib/ -I src/
+# FLAGS	:= -I lib/include/ -I lib/ -I src/
 MLXLIB := libs/MLX42
 LDFLAGS	:= -L ~/.brew/opt/glfw/lib/ -L $(MLXLIB) -L libs -lMLX42 -ldl -lglfw -lm -g
 LDFLAGS	:= -L "$(shell brew --prefix glfw)/lib/" -L $(MLXLIB)/build -L libs -lMLX42 -ldl -lglfw -lm -g
@@ -45,7 +45,7 @@ $(NAME): $(OBJ_DIR) $(OBJS)
 	$(CC) $(OBJS) $(libft_path) $(LDFLAGS) -o $(NAME)
 
 $(OBJS): %.o : %.c
-	gcc $(CFLAGS) -c -o $@ $<
+	gcc $(FLAGS) -c -o $@ $<
 
 
 $(OBJ_DIR): 

@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/10 00:12:22 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:44:36 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ void	ft_hook(void *param)
 		rotate_point(settings, -TURN_ANGLE);
 	if (mlx_is_key_down(settings->mlx, MLX_KEY_Z))
 		reset_view(settings);
-	draw_sky_floor(settings, false);
+	draw_sky_floor(settings);
 	draw_walls(settings);
 	usleep(20000);
 }
 
 int	main(int argc, char **argv)
 {
-	t_settings	*settings;
+	t_settings	*settings = NULL;
 
 	if (argc == 2)
 		settings = init_settings(argv[1]);
@@ -51,7 +51,7 @@ int	main(int argc, char **argv)
 		ft_putstr_fd("Error\nWrong input\n", 2);
 	if (settings)
 	{
-		draw_sky_floor(settings, true);
+		draw_sky_floor(settings);
 		mlx_loop_hook(settings->mlx, ft_hook, settings);
 		mlx_loop(settings->mlx);
 		clean_settings(settings);

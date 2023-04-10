@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:29:53 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:51 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:44:11 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	draw_walls(t_settings *settings)
 	}
 }
 
-void	draw_sky_floor(t_settings *settings, bool start)
+void	draw_sky_floor(t_settings *settings)
 {
 	float		d;
 

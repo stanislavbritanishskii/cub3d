@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:28:08 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:46 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:43:39 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ unsigned long	create_rgba(char **splitted, bool *check)
 
 bool	create_color(t_settings *res, char key)
 {
-	char	**splitted;
+	char	**splitted = NULL;
 	bool	check;
 
 	check = true;

@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:39:37 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 23:54:05 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:41:26 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool	add_to_dict(char *str, t_dict *dict)
 	return (true);
 }
 
-bool	initial_parsing(t_dict *dict, char *path, int fd)
+bool	initial_parsing(t_dict *dict, int fd)
 {
 	char	*str;
 
@@ -86,7 +86,6 @@ bool	initial_parsing(t_dict *dict, char *path, int fd)
 
 bool	read_map(t_settings *settings, char *path)
 {
-	t_map	*res;
 	t_dict	*dict;
 	int		fd;
 
@@ -94,7 +93,7 @@ bool	read_map(t_settings *settings, char *path)
 	if (fd < 0 || !map_extension_correct(path))
 		return (false);
 	dict = init_dict();
-	if (!initial_parsing(dict, path, fd))
+	if (!initial_parsing(dict, fd))
 		return (false);
 	settings->dict = dict;
 	settings->map = create_final_map(create_initial_map(fd));

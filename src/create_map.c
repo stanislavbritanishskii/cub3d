@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:39:58 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/07 23:53:47 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:45:31 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	get_max_width(t_map *res, int *height, char **i_map)
 	*height = 0;
 	while (i_map[*height])
 	{
-		if (ft_strlen(i_map[*height]) > width)
+		if ((int)ft_strlen(i_map[*height]) > width)
 			width = ft_strlen(i_map[*height]);
 		*height = *height + 1;
 	}
@@ -68,7 +68,7 @@ t_map	*create_final_map(char **i_map)
 		iterator = 0;
 		while (iterator < res->x_size + 1)
 		{
-			if (ft_strlen(i_map[height]) > iterator)
+			if ((int)ft_strlen(i_map[height]) > iterator)
 				res->grid[height][iterator] = (i_map[height][iterator]);
 			else
 				res->grid[height][iterator] = '0';

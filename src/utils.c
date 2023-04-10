@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 19:09:05 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/07 23:54:09 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:43:09 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ t_vector	get_ray_direction(t_vector observer_position,
 	return (ray_direction_rotated);
 }
 
-bool	incredible_check(t_vector position, t_vector direction,
-		t_map *map, t_march_return *res)
+bool	incredible_check(t_vector position,
+		t_map *map)
 {
 	int	map_x;
 	int	map_y;
@@ -96,7 +96,7 @@ void	hit_a_wall(t_vector position, t_vector direction,
 		map_x = (int)position.x;
 		map_y = (int)position.y;
 	}
-	if (incredible_check(position, direction, map, res))
+	if (incredible_check(position, map))
 	{
 		res->shift = abs_float(position.y - (int)position.y);
 		res->direction = 1 + (position.x - (int)position.x > 0.5f);
