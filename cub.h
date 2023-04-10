@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:37:39 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/09 20:24:56 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:44:28 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ int				splitted_len(char **splitted);
 void			draw_walls(t_settings *settings);
 void			draw_direction(t_settings *settings,
 					t_march_return *march, float d);
-void			draw_sky_floor(t_settings *settings, bool start);
+void			draw_sky_floor(t_settings *settings);
 void			draw_line_floor_sky(t_settings *settings, int x);
 void			put_pixel(t_settings *settings, int x, int y, uint32_t color);
 
@@ -161,7 +161,7 @@ void			get_max_width(t_map *res, int *height, char **i_map);
 //read_map.c
 void			set_player(t_settings *settings, t_map *map, int x, int y);
 bool			read_map(t_settings *settings, char *path);
-bool			initial_parsing(t_dict *dict, char *path, int fd);
+bool			initial_parsing(t_dict *dict, int fd);
 bool			add_to_dict(char *str, t_dict *dict);
 void			read_map_error(char *str, t_dict *dict);
 
@@ -182,8 +182,8 @@ t_march_return	*ray_march(t_settings *settings,
 					t_vector direction, t_map *map, t_march_return *res);
 void			hit_a_wall(t_vector position, t_vector direction,
 					t_map *map, t_march_return *res);
-bool			incredible_check(t_vector position, t_vector direction,
-					t_map *map, t_march_return *res);
+bool			incredible_check(t_vector position,
+					t_map *map);
 t_vector		get_ray_direction(t_vector observer_position,
 					t_vector point_of_view, float angle);
 void			print_map(t_map *map, t_vector *player, t_vector *view);
