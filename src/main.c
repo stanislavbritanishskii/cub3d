@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 18:54:31 by sbritani          #+#    #+#             */
-/*   Updated: 2023/04/10 02:44:36 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:48:41 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ void	ft_hook(void *param)
 
 int	main(int argc, char **argv)
 {
-	t_settings	*settings = NULL;
+	t_settings	*settings;
 
+	settings = NULL;
 	if (argc == 2)
 		settings = init_settings(argv[1]);
 	else

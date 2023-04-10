@@ -6,7 +6,7 @@
 /*   By: dhendzel <dhendzel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 22:28:08 by dhendzel          #+#    #+#             */
-/*   Updated: 2023/04/10 02:43:39 by dhendzel         ###   ########.fr       */
+/*   Updated: 2023/04/10 02:48:58 by dhendzel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,10 @@ unsigned long	create_rgba(char **splitted, bool *check)
 
 bool	create_color(t_settings *res, char key)
 {
-	char	**splitted = NULL;
+	char	**splitted;
 	bool	check;
 
+	splitted = NULL;
 	check = true;
 	if (key == 'C')
 		splitted = ft_split(dict_get(res->dict, "C\0", "hui"), ",");
